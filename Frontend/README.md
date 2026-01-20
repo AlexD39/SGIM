@@ -1,7 +1,7 @@
 ## Frontend – Aportación individual
 
 **Responsable:** Carlos Eduardo Hernández Camacho  
-**Rol:** Frontend Developer / Arquitectura de Información y Accesibilidad
+**Rol:** Frontend 
 
 ### Responsabilidades
 - Definición de estructura base del frontend
@@ -14,3 +14,4 @@
 - `views/` → Vistas del sistema (login, dashboard, reportes)
 - `public/` → Recursos estáticos
 - `docs/` → Documentación, sitemap y flujos
+
