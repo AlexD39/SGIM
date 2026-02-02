@@ -1,0 +1,16 @@
+nav[aria-label="Ruta de navegación"] ol {
+  list-style: none;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+  margin: 0;
+}
+
+nav[aria-label="Ruta de navegación"] li::after {
+  content: "/";
+  margin-left: 0.5rem;
+}
+
+nav[aria-label="Ruta de navegación"] li:last-child::after {
+  content: "";
+}
