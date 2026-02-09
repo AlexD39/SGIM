@@ -94,7 +94,6 @@ function Register() {
     [name]: newValue,
   }));
 
-  // 🔹 feedback en tiempo real
   const fieldError = validateField(name, newValue);
 
   setErrors((prev) => ({
@@ -153,7 +152,6 @@ function Register() {
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
 
-      // mover foco al primer error
       const firstErrorField = Object.keys(validationErrors)[0];
       refs[firstErrorField].current.focus();
       return;
@@ -161,7 +159,7 @@ function Register() {
 
     setLoading(true);
 
-    // 🔹 Aquí luego va el fetch real
+    //aquí luego va el fetch real
     setTimeout(() => {
       setLoading(false);
       navigate("/login");
