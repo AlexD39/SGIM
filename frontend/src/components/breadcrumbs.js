@@ -5,6 +5,14 @@ function Breadcrumbs() {
   const location = useLocation();
   const paths = location.pathname.split("/").filter(Boolean);
 
+  const breadcrumbMap = {
+  login: "Inicio de sesión",
+  register: "Registro",
+  inicio: "Inicio",
+  admin: "Panel administrador",
+  usuarios: "Gestión de usuarios"
+};
+
   return (
     <nav aria-label="Ruta de navegación">
       <ol>
@@ -16,7 +24,7 @@ function Breadcrumbs() {
           const url = "/" + paths.slice(0, index + 1).join("/");
           return (
             <li key={url}>
-              <Link to={url}>{path}</Link>
+              <Link to={url}>{breadcrumbMap[path] || path}</Link>
             </li>
           );
         })}

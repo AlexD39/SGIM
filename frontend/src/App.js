@@ -6,6 +6,7 @@ import NotFound from "./pages/notFound";
 import ServerError from "./pages/serverError";
 import Login from "./pages/login";
 import Formulario from "./pages/formulario";
+import Register from "./pages/register";
 import "./App.css";
 
 function App() {
@@ -22,8 +23,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/500" element={<ServerError />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/ReporteNuevo" element={<Formulario />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </main>
     </>
