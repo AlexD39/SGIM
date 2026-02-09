@@ -7,11 +7,12 @@
 
 .register-card {
   background-color: #ffffff;
-  padding: 1rem 2.5rem;
   border-radius: 8px;
+  margin-top: 1rem;
+  padding: 2rem 2.5rem;
   width: 100%;
   max-width: 650px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
 .register-card h2 {

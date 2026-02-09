@@ -1,0 +1,124 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.login-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.login-card h2 {
+  color: #000000;
+  text-align: center;
+  margin-bottom: 1.8rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group input {
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input::placeholder {
+  color: #cad8ec;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #008d71;
+  box-shadow: 0 0 0 2px rgba(34, 119, 145, 0.3);
+}
+
+.form-group input[aria-invalid="true"] {
+  border-color: #f87171;
+}
+
+.error {
+  color: #fca5a5;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+.error-general {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+  background-color: #008d71;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #008d71;
+}
+
+button[type="submit"]:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+button[type="submit"]:disabled {
+  background-color: #539c8d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.form-hint {
+  color: #000000;
+  margin-top: 0.8rem;
+  text-align: center;
+}
+
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #000000;
+  font-size: 0.9rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #008d71;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.link-button:hover,
+.link-button:focus {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 1.6rem 1.4rem;
+  }
+}
