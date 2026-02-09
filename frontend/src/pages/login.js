@@ -77,7 +77,7 @@ function Login() {
     setGeneralError("");
     setLoading(true);
 
-    // 🔹 aquí luego va el login real
+    //aquí luego va el login real
     setTimeout(() => {
       setLoading(false);
 
