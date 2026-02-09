@@ -307,6 +307,12 @@ function Register() {
         </div>
         </div>
 
+        {!isFormValid && (
+          <p className="form-hint" aria-live="polite">
+          Completa todos los campos correctamente para continuar
+          </p>
+        )}
+
         <button type="submit" disabled={!isFormValid || loading} aria-disabled={!isFormValid || loading}>
           {loading ? "Creando cuenta..." : "Crear cuenta"}
         </button>
