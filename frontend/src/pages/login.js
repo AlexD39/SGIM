@@ -24,7 +24,7 @@ function Login() {
     password: useRef(null),
   };
 
-  const submitButtonRef = useRef(null);
+  const generalErrorRef = useRef(null);
 
   const validateField = (name, value) => {
     let error = "";
@@ -67,10 +67,21 @@ function Login() {
   }, [errors, formData]);
 
   useEffect(() => {
-    if (isFormValid && submitButtonRef.current) {
-      submitButtonRef.current.focus();
-    }
-  }, [isFormValid]);
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setGeneralError("");
+      } 
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+  useEffect(() => {
+  if (generalError && generalErrorRef.current) {
+    generalErrorRef.current.focus();
+  }
+  }, [generalError]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,7 +94,7 @@ function Login() {
 
       // simular error
       setGeneralError("Correo o contraseña incorrectos");
-      refs.correo.current.focus();
+      
     }, 1000);
   };
 
@@ -94,12 +105,12 @@ function Login() {
         <h2>Iniciar sesión</h2>
 
         {generalError && (
-          <div className="error-general" role="alert" aria-live="assertive">
+          <div ref={generalErrorRef} className="error-general" role="alert" aria-live="assertive" tabIndex="-1">
             {generalError}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate aria-busy={loading}>
           <div className="form-group">
             <label htmlFor="correo">Correo electrónico</label>
             <input
@@ -139,7 +150,6 @@ function Login() {
           </div>
 
           <button
-            ref={submitButtonRef}
             type="submit"
             disabled={!isFormValid || loading}
             aria-disabled={!isFormValid || loading}
