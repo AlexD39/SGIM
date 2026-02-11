@@ -116,28 +116,12 @@ function Register() {
   const validate = () => {
     const newErrors = {};
 
-    if (!formData.nombre) newErrors.nombre = "El nombre es obligatorio";
-    if (!formData.apellido) newErrors.apellido = "El apellido es obligatorio";
-
-    if (!formData.matricula) {
-    newErrors.matricula = "La matrícula es obligatoria";
-    } else if (formData.matricula.length < 10) {
-    newErrors.matricula = "La matrícula debe tener exactamente 10 números";
+    Object.keys(formData).forEach((field) => {
+    const error = validateField(field, formData[field]);
+    if (error) {
+      newErrors[field] = error;
     }
-    
-    if (!formData.telefono) {
-    newErrors.telefono = "El teléfono es obligatorio";
-    } else if (formData.telefono.length < 10) {
-    newErrors.telefono = "El teléfono debe tener exactamente 10 números";
-    }
-
-    if (!formData.correo) {
-    newErrors.correo = "El correo es obligatorio";
-    } else if (!formData.correo.includes("@")) {
-    newErrors.correo = "El correo debe contener un @";
-    }
-
-    if (!formData.password) newErrors.password = "La contraseña es obligatoria";
+    });
 
     return newErrors;
   };
