@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import "./home.css";
 
 function Home() {
   useEffect(() => {
@@ -15,7 +16,8 @@ function Home() {
   }, [showInfo]);
 
   return (
-    <main style={{ padding: "2rem" }}>
+    <main className="home-container">
+      <div className="home-card">
       <h1>Sistema de Gestión de Incidencias Universitarias</h1>
 
       <p>
@@ -27,16 +29,18 @@ function Home() {
         Para comenzar, crea una cuenta o inicia sesión desde el menú superior.
       </p>
 
-      <button onClick={() => setShowInfo((prev) => !prev)}>
+      <button onClick={() => setShowInfo((prev) => !prev)} aria-expanded={showInfo}
+  aria-controls="info-section">
         {showInfo ? "Ocultar información" : "¿Qué es SGIM?"}
       </button>
 
       {showInfo && (
         <section
+          id="info-section"
           ref={infoRef}
           tabIndex="-1"
           aria-labelledby="info-title"
-          style={{ marginTop: "1.5rem" }}
+          className="info-section"
         >
           <h2 id="info-title">¿Qué es SGIM?</h2>
           <p>
@@ -46,6 +50,7 @@ function Home() {
           </p>
         </section>
       )}
+      </div>
     </main>
   );
 }
