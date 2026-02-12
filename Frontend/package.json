@@ -20,7 +20,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "eslint src --ext .js,.jsx",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "lint": "eslint src --ext .js,.jsx --max-warnings=0",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -29,7 +31,17 @@
       "react-app/jest",
       "plugin:jsx-a11y/recommended"
     ],
-    "plugins": ["jsx-a11y"]
+    "plugins": ["jsx-a11y"],
+    "rules": {
+      "jsx-a11y/anchor-is-valid": "error",
+      "jsx-a11y/aria-props": "error",
+      "jsx-a11y/aria-proptypes": "error",
+      "jsx-a11y/aria-unsupported-elements": "error",
+      "jsx-a11y/role-has-required-aria-props": "error",
+      "jsx-a11y/role-supports-aria-props": "error",
+      "jsx-a11y/no-autofocus": "warn",
+      "jsx-a11y/no-redundant-roles": "error"
+    }
   },
   "browserslist": {
     "production": [

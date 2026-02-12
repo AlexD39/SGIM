@@ -1,15 +1,28 @@
 version: "3.9"
 
+# Docker Compose para desarrollo con hot reload
+# Uso: docker-compose -f docker-compose.dev.yml up
+
 services:
-  frontend:
-    build:
-      context: ./Frontend
-      dockerfile: Dockerfile
-    container_name: sgim-frontend
+  frontend-dev:
+    image: node:20-alpine
+    container_name: sgim-frontend-dev
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - FAST_REFRESH=true
     ports:
-      - "80:80"
+      - "3000:3000"
     networks:
-      - sgim
+      - sgim-dev
+    stdin_open: true
+    tty: true
 
   backend:
     image: node:20-alpine
@@ -29,7 +42,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - sgim
+      - sgim-dev
 
   db:
     image: postgres:15-alpine
@@ -42,7 +55,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data  # persistencia PostgreSQL
+      - db_data:/var/lib/postgresql/data
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-sgim} -d ${POSTGRES_DB:-sgim}"]
@@ -50,11 +63,11 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - sgim
+      - sgim-dev
 
 volumes:
   db_data:
 
 networks:
-  sgim:
+  sgim-dev:
     driver: bridge
