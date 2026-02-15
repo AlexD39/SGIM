@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import "./breadcrumbs.css";
+import Formulario from "../pages/formulario";
 
 function Breadcrumbs() {
   const location = useLocation();
@@ -10,7 +11,9 @@ function Breadcrumbs() {
   register: "Registro",
   inicio: "Inicio",
   admin: "Panel administrador",
-  usuarios: "Gestión de usuarios"
+  user: "Usuario UTT",
+  tablero: "Tablero de incidencias",
+  formulario: "Reporte de incidencia",
 };
 
   return (

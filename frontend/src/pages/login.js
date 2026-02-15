@@ -1,16 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import "./login.css";
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
+import "../styles/login.css";
 
 function Login() {
   useEffect(() => {
     document.title = "SGIM | Iniciar sesión";
   }, []);
 
+  const { login } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    correo: "",
+    email: "",
     password: "",
   });
 
@@ -20,7 +24,7 @@ function Login() {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const refs = {
-    correo: useRef(null),
+    email: useRef(null),
     password: useRef(null),
   };
 
@@ -29,7 +33,7 @@ function Login() {
   const validateField = (name, value) => {
     let error = "";
 
-    if (name === "correo") {
+    if (name === "email") {
       if (!value) error = "El correo es obligatorio";
       else if (!value.includes("@")) error = "El correo debe contener un @";
     }
@@ -90,11 +94,29 @@ function Login() {
 
     //aquí luego va el login real
     setTimeout(() => {
-      setLoading(false);
+      // Simulación básica
+        if (formData.email === "admin@sgim.com" && formData.password === "123456") {
+          login({
+            id: 1,
+            nombre: "Administrador",
+            rol: "admin",
+          });
 
-      // simular error
-      setGeneralError("Correo o contraseña incorrectos");
-      
+          navigate("/admin/dashboard");
+        } 
+        else if (formData.email === "estudiante@sgim.com" && formData.password === "123456") {
+          login({
+            id: 2,
+            nombre: "Estudiante",
+            rol: "user",
+          });
+
+          navigate("/tablero");
+        } 
+        else {
+          setGeneralError("Correo o contraseña incorrectos");
+          setLoading(false);
+        }
     }, 1000);
   };
 
@@ -114,18 +136,18 @@ function Login() {
           <div className="form-group">
             <label htmlFor="correo">Correo electrónico</label>
             <input
-              ref={refs.correo}
-              id="correo"
-              name="correo"
+              ref={refs.email}
+              id="email"
+              name="email"
               type="email"
-              value={formData.correo}
+              value={formData.email}
               onChange={handleChange}
-              aria-invalid={!!errors.correo}
-              aria-describedby={errors.correo ? "error-correo" : undefined}
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? "error-correo" : undefined}
             />
-            {errors.correo && (
-              <span id="error-correo" className="error" role="alert">
-                {errors.correo}
+            {errors.email && (
+              <span id="error-email" className="error" role="alert">
+                {errors.email}
               </span>
             )}
           </div>

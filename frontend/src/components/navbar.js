@@ -1,7 +1,11 @@
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 
 function Navbar() {
+  const { user, logout } = useContext(AuthContext);
+
   return (
     <nav className="navbar" aria-label="Navegación principal">
       <div className="navbar-left">
@@ -11,12 +15,46 @@ function Navbar() {
       </div>
 
       <div className="navbar-right">
-        <Link to="/register" className="navbar-button">
-          Crear cuenta
-        </Link>
-        <Link to="/login" className="navbar-button">
-          Iniciar sesión
-        </Link>
+        
+        {!user && (
+          <>
+            <Link to="/register" className="navbar-button">
+              Crear cuenta
+            </Link>
+            <Link to="/login" className="navbar-button">
+              Iniciar sesión
+            </Link>
+          </>
+        )}
+
+        {user?.rol === "user" && (
+          <>
+            <Link to="/formulario" className="navbar-button">
+              Reportar incidencia
+            </Link>
+            <Link to="/tablero" className="navbar-button">
+              Mis incidencias
+            </Link>
+            <Link onClick={logout} to="/" className="navbar-button">
+              Cerrar sesión
+            </Link>
+          </>
+        )}
+
+        {user?.rol === "admin" && (
+          <>
+            <Link to="/admin/incidencias" className="navbar-button">
+              Gestionar incidencias
+            </Link>
+            <Link to="/admin/usuarios" className="navbar-button">
+              Usuarios
+            </Link>
+            <Link onClick={logout} to="/" className="navbar-button">
+              Cerrar sesión
+            </Link>
+          </>
+        )}
+
       </div>
     </nav>
   );

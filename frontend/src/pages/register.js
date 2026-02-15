@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import "./register.css";
+import "../styles/register.css";
 
 function Register() {
   useEffect(() => {
@@ -14,7 +14,7 @@ function Register() {
     apellido: "",
     matricula: "",
     telefono: "",
-    correo: "",
+    email: "",
     password: "",
   });
 
@@ -29,7 +29,7 @@ function Register() {
     apellido: useRef(null),
     matricula: useRef(null),
     telefono: useRef(null),
-    correo: useRef(null),
+    email: useRef(null),
     password: useRef(null),
   };
 
@@ -61,7 +61,7 @@ function Register() {
       }
       break;
 
-    case "correo":
+    case "email":
       if (!value) {
         error = "El correo es obligatorio";
       } else if (!value.includes("@")) {
@@ -252,18 +252,18 @@ function Register() {
         <div className="form-group">
           <label htmlFor="correo">Correo electrónico</label>
           <input
-            ref={refs.correo}
-            id="correo"
-            name="correo"
+            ref={refs.email}
+            id="email"
+            name="email"
             type="email"
-            value={formData.correo}
+            value={formData.email}
             onChange={handleChange}
-            aria-invalid={!!errors.correo}
-            aria-describedby={errors.correo ? "error-correo" : undefined}
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "error-email" : undefined}
           />
-          {errors.correo && (
-            <span id="error-correo" className="error" role="alert">
-              {errors.correo}
+          {errors.email && (
+            <span id="error-email" className="error" role="alert">
+              {errors.email}
             </span>
           )}
         </div>
