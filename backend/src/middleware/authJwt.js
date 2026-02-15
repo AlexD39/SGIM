@@ -9,19 +9,29 @@ function authRequired(req, res, next) {
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = payload; // { sub, role, email, iat, exp }
+    // Agregamos un "o secreto_para_el_mvp" por seguridad si el .env falla
+    const payload = jwt.verify(token, process.env.JWT_SECRET || 'secreto_para_el_mvp');
+    req.user = payload; // Aquí vienen { sub, role, email }
     return next();
   } catch (e) {
     return res.status(401).json({ error: "unauthorized", message: "Token inválido o expirado" });
   }
 }
 
+/**
+ * requireRole ahora permite que pases uno o varios roles
+ * Ejemplo: requireRole("admin") o requireRole("admin", "encargado")
+ */
 function requireRole(...roles) {
   return (req, res, next) => {
-    const role = req.user?.role;
-    if (!role || !roles.includes(role)) {
-      return res.status(403).json({ error: "forbidden", message: "No tienes permisos" });
+    // Nota: usamos req.user.role porque así lo configuramos en el authController
+    const userRole = req.user?.role; 
+    
+    if (!userRole || !roles.includes(userRole)) {
+      return res.status(403).json({ 
+        error: "forbidden", 
+        message: `No tienes permisos. Se requiere uno de estos roles: ${roles.join(", ")}` 
+      });
     }
     return next();
   };

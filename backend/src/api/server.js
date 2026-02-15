@@ -1,5 +1,10 @@
-require("dotenv").config();
-const { createApp } = require("./app");
+require('dotenv').config();
+const { createApp } = require('./app');
 
+const app = createApp();
 const PORT = process.env.PORT || 3000;
-createApp().listen(PORT, () => console.log(`API listening on port ${PORT}`));
+
+app.listen(PORT, () => {
+  console.log(`🚀 SGIM Backend corriendo en http://localhost:${PORT}`);
+  console.log(`✅ Health check: http://localhost:${PORT}/health`);
+});

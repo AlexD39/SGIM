@@ -2,82 +2,39 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { authRequired, requireRole } = require("../middleware/authJwt");
+// ✅ Importamos Multer (el middleware de subida)
+const upload = require("../middleware/upload");
+// ✅ Controladores integrados
+const { login } = require("../modules/authController"); 
+const { crearReporte } = require("../modules/reportsController");
 
 function createApp() {
   const app = express();
-  app.use(express.json());
 
-  // ✅ Health
+  // 🛠️ MÁXIMA IMPORTANCIA: Estas líneas deben ir ANTES de las rutas
+  app.use(express.json()); // ✅ Permite leer JSON (Fundamental para el Login)
+  app.use(express.urlencoded({ extended: true })); // ✅ Permite leer Form-data de texto
+  
+  // ✅ Servir la carpeta de subidas para poder ver las fotos en el navegador
+  app.use('/uploads', express.static('uploads'));
+
+  // ✅ Health Check
   app.get("/health", (req, res) => res.status(200).json({ ok: true }));
 
-  /**
-   * Demo users (en real: DB)
-   * user: reporta incidencias
-   * admin: encargado valida/cambia estatus
-   */
-  const users = [
-    {
-      id: 1,
-      email: "user@sgim.com",
-      role: "user",
-      passwordHash: bcrypt.hashSync("123456", 10),
-    },
-    {
-      id: 2,
-      email: "admin@sgim.com",
-      role: "admin",
-      passwordHash: bcrypt.hashSync("123456", 10),
-    },
-  ];
+  // ✅ LOGIN (Conectado a PostgreSQL)
+  // Asegúrate que en Thunder Client envías un JSON con "email" y "password"
+  app.post("/auth/login", login); 
 
-  // ✅ Login (pública)
-  app.post("/auth/login", async (req, res) => {
-    const { email, password } = req.body || {};
-    if (!email || !password) {
-      return res.status(400).json({ error: "bad_request", message: "email y password son requeridos" });
-    }
-
-    const u = users.find((x) => x.email === email);
-    if (!u) return res.status(401).json({ error: "unauthorized", message: "Credenciales inválidas" });
-
-    const ok = await bcrypt.compare(password, u.passwordHash);
-    if (!ok) return res.status(401).json({ error: "unauthorized", message: "Credenciales inválidas" });
-
-    const token = jwt.sign(
-      { sub: u.id, email: u.email, role: u.role },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_EXPIRES || "1h" }
-    );
-
-    return res.status(200).json({ token, token_type: "Bearer" });
-  });
-
-  // ✅ Perfil (privada)
+  // ✅ PERFIL
   app.get("/me", authRequired, (req, res) => {
     res.status(200).json({ user: req.user });
   });
 
-  // ✅ Dashboard (privada)
-  app.get("/dashboard/summary", authRequired, (req, res) => {
-    res.status(200).json({
-      total: 0,
-      pendientes: 0,
-      en_proceso: 0,
-      resueltos: 0,
-      user: req.user,
-    });
-  });
+  // ✅ REPORTES (MODIFICADO PARA IMÁGENES)
+  // Añadimos 'upload.single('evidencia')' para que acepte la foto
+  app.post("/reports", authRequired, upload.single('evidencia'), crearReporte);
 
-  // ✅ Reportes (privadas) - stub
-  app.post("/reports", authRequired, (req, res) => {
-    const { titulo, descripcion } = req.body || {};
-    if (!titulo || !descripcion) {
-      return res.status(400).json({ error: "bad_request", message: "titulo y descripcion son requeridos" });
-    }
-    // En real: guardar en DB
-    return res.status(201).json({ id: 1, titulo, descripcion, status: "pendiente" });
-  });
-
+  // ✅ OTRAS RUTAS DE REPORTES
   app.get("/reports/mine", authRequired, (req, res) => {
     res.status(200).json({ data: [] });
   });
@@ -86,7 +43,7 @@ function createApp() {
     res.status(200).json({ id: req.params.id, status: "pendiente" });
   });
 
-  // ✅ Admin/Encargado (privadas + rol)
+  // ✅ RUTAS DE ADMINISTRADOR
   app.get("/admin/reports", authRequired, requireRole("admin"), (req, res) => {
     res.status(200).json({ data: [] });
   });
@@ -95,34 +52,22 @@ function createApp() {
     const { status } = req.body || {};
     const allowed = ["pendiente", "en_proceso", "resuelto"];
     if (!allowed.includes(status)) {
-      return res.status(400).json({ error: "bad_request", message: `status inválido. Usa: ${allowed.join(", ")}` });
+      return res.status(400).json({ error: "bad_request", message: `status inválido` });
     }
     return res.status(200).json({ id: req.params.id, status });
   });
 
-  app.get("/admin/history", authRequired, requireRole("admin"), (req, res) => {
-    res.status(200).json({ data: [] });
-  });
-
-  // ✅ Ruta 500 solo en test (para tu entrega)
-  if (process.env.NODE_ENV === "test") {
-    app.get("/__test__/boom", () => {
-      throw new Error("boom");
-    });
-  }
-
-  // ✅ 404
+  // ✅ Manejo de errores 404
   app.use((req, res) => {
-    res.status(404).json({ error: "not_found", message: "Ruta no encontrada", path: req.originalUrl });
+    res.status(404).json({ error: "not_found", message: "Ruta no encontrada" });
   });
 
-  // ✅ 500
+  // ✅ Manejo de errores 500
   app.use((err, req, res, next) => {
-    const traceId = req.headers["x-trace-id"] || "no-trace";
+    console.error("🔴 Error en el servidor:", err.message);
     res.status(500).json({
       error: "internal_error",
-      message: "Ocurrió un error interno. Intenta más tarde.",
-      traceId,
+      message: "Algo salió mal en el servidor.",
     });
   });
 
