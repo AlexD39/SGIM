@@ -112,8 +112,15 @@ function Login() {
           });
 
           navigate("/tablero");
-        } 
-        else {
+        } else if (formData.email === "estudiante2@sgim.com" && formData.password === "123456") {
+          login({
+            id: 3,
+            nombre: "Estudiante 2",
+            rol: "user",
+          });
+
+          navigate("/tablero");
+        } else {
           setGeneralError("Correo o contraseña incorrectos");
           setLoading(false);
         }

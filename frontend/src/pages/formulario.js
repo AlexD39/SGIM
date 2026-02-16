@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
 import "../styles/formulario.css";
 
 function Formulario() {
@@ -10,6 +12,9 @@ function Formulario() {
     descripcion: "",
     imagen: null,
   });
+
+  const { user } = useContext(AuthContext);
+  const [preview, setPreview] = useState(null);
 
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
@@ -46,10 +51,14 @@ function Formulario() {
     if (name === "imagen") {
       const file = files[0];
 
-      setFormData((prev) => ({
-        ...prev,
-        imagen: file,
-      }));
+      if (file) {
+        setFormData((prev) => ({
+          ...prev,
+          imagen: file,
+        }));
+
+        setPreview(URL.createObjectURL(file));
+      }
 
       const fieldError = validateField(name, file);
 
@@ -89,6 +98,26 @@ function Formulario() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const nuevaIncidencia = {
+    id: Date.now(),
+    titulo: formData.titulo,
+    descripcion: formData.descripcion,
+    imagen: preview,
+    userId: user.id, // 🔐 clave para filtrar después
+    fecha: new Date().toLocaleDateString(),
+    estado: "Pendiente"
+    };
+
+     const incidenciasGuardadas =
+        JSON.parse(localStorage.getItem("incidencias")) || [];
+
+      incidenciasGuardadas.push(nuevaIncidencia);
+
+      localStorage.setItem(
+        "incidencias",
+        JSON.stringify(incidenciasGuardadas)
+      );
 
     // Simulación de envío
     setTimeout(() => {
