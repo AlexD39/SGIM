@@ -3,6 +3,10 @@ import { AuthContext } from "../context/authContext";
 import "../styles/dashboard.css";
 
 function Dashboard() {
+  useEffect(() => {
+    document.title = "SGIM | Incidencias reportadas";
+  }, []);
+
   const { user } = useContext(AuthContext);
   const [incidencias, setIncidencias] = useState([]);
   const [filtro, setFiltro] = useState("Todos");
@@ -11,7 +15,7 @@ function Dashboard() {
     const todas =
       JSON.parse(localStorage.getItem("incidencias")) || [];
 
-    const ordenadas = todas.sort(
+    const ordenadas = [...todas].sort(
       (a, b) => b.id - a.id
     );
 

@@ -94,7 +94,7 @@ function Login() {
 
     //aquí luego va el login real
     setTimeout(() => {
-      // Simulación básica
+      // Simulación básica de JWT
         if (formData.email === "admin@sgim.com" && formData.password === "123456") {
           login({
             id: 1,
