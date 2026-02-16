@@ -1,11 +1,9 @@
-/* Contenedor principal */
 .admin-container {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Header */
 .admin-container header h2 {
   margin-bottom: 0.5rem;
 }
@@ -15,20 +13,17 @@
   margin-bottom: 2rem;
 }
 
-/* Grid */
 .admin-grid {
   display: grid;
   gap: 1.5rem;
 }
 
-/* Desktop */
 @media (min-width: 900px) {
   .admin-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Card */
 .admin-card {
   background: #ffffff;
   border-radius: 10px;
@@ -39,8 +34,6 @@
   gap: 0.8rem;
 }
 
-/* Estado */
-/* Base */
 .estado {
   padding: 0.4rem 0.9rem;
   border-radius: 20px;
@@ -50,25 +43,21 @@
   display: inline-block;
 }
 
-/* Pendiente */
 .estado-pendiente {
   background-color: #fff3cd;
   color: #856404;
 }
 
-/* En proceso */
 .estado-en-proceso {
   background-color: #cce5ff;
   color: #004085;
 }
 
-/* Resuelto */
 .estado-resuelto {
   background-color: #d4edda;
   color: #155724;
 }
 
-/* Select */
 .admin-card select {
   padding: 0.4rem;
   border-radius: 6px;
@@ -76,20 +65,17 @@
   margin-top: 0.3rem;
 }
 
-/* Imagen */
 .admin-card img {
   width: 100%;
-  max-width: 400px;       /* límite de ancho */
-  height: 220px;          /* altura fija */
-  object-fit: cover;      /* recorta sin deformar */
+  max-width: 400px;      
+  height: 220px;          
+  object-fit: cover;      
   border-radius: 10px;
   margin-top: 0.8rem;
-  align-self: center;     /* centra la imagen */
+  align-self: center;     
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
-/* Comentarios */
-/* Comentarios */
 .comentarios {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
@@ -105,7 +91,6 @@
   font-weight: 600;
 }
 
-/* Lista */
 .lista-comentarios {
   display: flex;
   flex-direction: column;
@@ -125,7 +110,6 @@
   color: #777;
 }
 
-/* Formulario comentario */
 .form-comentario {
   display: flex;
   flex-direction: column;
@@ -160,7 +144,7 @@
 .form-comentario button:hover {
   background-color: #1565c0;
 }
-/* Accesibilidad (screen reader only) */
+
 .sr-only {
   position: absolute;
   left: -9999px;
@@ -176,7 +160,6 @@
   width: fit-content;
 }
 
-/* Resumen superior */
 .resumen-estados {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

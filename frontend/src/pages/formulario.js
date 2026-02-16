@@ -26,7 +26,7 @@ function Formulario() {
   const [successMessage, setSuccessMessage] = useState("");
   
 
-  // 🔎 Validaciones
+  // Validaciones
   const validateField = (name, value) => {
     let error = "";
 
@@ -87,7 +87,7 @@ function Formulario() {
     }));
   };
 
-  // 🔄 Validación global
+  //  Validación global
   useEffect(() => {
     const hasErrors = Object.values(errors).some((error) => error);
     const hasEmptyFields =
@@ -108,8 +108,8 @@ function Formulario() {
     titulo: formData.titulo,
     descripcion: formData.descripcion,
     imagen: preview,
-    userId: user.id, // 🔐 clave para filtrar después
-    matricula: user.matricula, // 🔐 para mostrar en el tablero
+    userId: user.id, //  clave para filtrar después
+    matricula: user.matricula, //  para mostrar en el tablero
     fecha: new Date().toLocaleDateString(),
     estado: "Pendiente",
     comentario: [],
