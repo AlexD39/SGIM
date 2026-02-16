@@ -94,7 +94,7 @@ function Login() {
 
     //aquí luego va el login real
     setTimeout(() => {
-      // Simulación básica
+      // Simulación básica de JWT
         if (formData.email === "admin@sgim.com" && formData.password === "123456") {
           login({
             id: 1,
@@ -109,11 +109,20 @@ function Login() {
             id: 2,
             nombre: "Estudiante",
             rol: "user",
+            matricula: "20210001",
           });
 
           navigate("/tablero");
-        } 
-        else {
+        } else if (formData.email === "estudiante2@sgim.com" && formData.password === "123456") {
+          login({
+            id: 3,
+            nombre: "Estudiante 2",
+            rol: "user",
+            matricula: "20210002",
+          });
+
+          navigate("/tablero");
+        } else {
           setGeneralError("Correo o contraseña incorrectos");
           setLoading(false);
         }

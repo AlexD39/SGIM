@@ -35,7 +35,6 @@
   text-align: center;
 }
 
-/* Contenedor horizontal */
 .custom-file-container {
   display: flex;
   align-items: center;
@@ -43,12 +42,10 @@
   margin-top: 6px;
 }
 
-/* Ocultar input real */
 .file-input-hidden {
   display: none;
 }
 
-/* Botón personalizado */
 .custom-file-button {
   background-color: #2563eb;
   color: white;
@@ -63,7 +60,6 @@
   background-color: #1e4ed8;
 }
 
-/* Nombre del archivo */
 .file-name {
   font-size: 0.9rem;
   color: #444;
