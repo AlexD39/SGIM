@@ -1,9 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { Link } from "react-router-dom";
 import "../styles/tablero.css";
 
 function Tablero() {
+  useEffect(() => {
+    document.title = "SGIM | Tablero de incidencias";
+  }, []);
+
   const { user } = useContext(AuthContext);
   const [misIncidencias, setMisIncidencias] = useState([]);
 
@@ -15,7 +18,11 @@ function Tablero() {
       (inc) => inc.userId === user.id
     );
 
-    setMisIncidencias(filtradas);
+    const ordenadas = [...filtradas].sort(
+      (a, b) => b.id - a.id
+    );
+
+    setMisIncidencias(ordenadas);
   }, [user]);
 
   return (
@@ -40,7 +47,7 @@ function Tablero() {
             >
               <header className="card-header">
                 <h3>{inc.titulo}</h3>
-                <span className="estado">
+                <span className={`estado estado-${inc.estado.replace(" ", "-").toLowerCase()}`}>
                   {inc.estado}
                 </span>
               </header>
@@ -54,9 +61,27 @@ function Tablero() {
                 />
               )}
 
+              {inc.comentarios && inc.comentarios.length > 0 && (
+                <section
+                  className="comentarios-usuario"
+                  aria-label="Comentarios del administrador"
+                >
+                  <h4>Seguimiento de la incidencia</h4>
+
+                  <div className="lista-comentarios">
+                    {inc.comentarios.map((com, index) => (
+                      <div key={index} className="comentario-item">
+                        {com}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               <footer className="card-footer">
                 <small>Reportada el {inc.fecha}</small>
               </footer>
+
             </article>
           ))}
         </section>

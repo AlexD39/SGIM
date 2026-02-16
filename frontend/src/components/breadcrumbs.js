@@ -9,10 +9,11 @@ function Breadcrumbs() {
   login: "Inicio de sesión",
   register: "Registro",
   inicio: "Inicio",
-  admin: "Panel administrador",
+  admin: "Panel administrativo",
   user: "Usuario UTT",
   tablero: "Tablero de incidencias",
   formulario: "Reporte de incidencia",
+  dashboard: "Gestión de incidencias",
 };
 
   return (
