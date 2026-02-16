@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
 import "../styles/formulario.css";
 
 function Formulario() {
+  useEffect(() => {
+    document.title = "SGIM | Reporte de incidencia";
+  }, []);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -11,13 +17,16 @@ function Formulario() {
     imagen: null,
   });
 
+  const { user } = useContext(AuthContext);
+  const [preview, setPreview] = useState(null);
+
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   
 
-  // 🔎 Validaciones
+  // Validaciones
   const validateField = (name, value) => {
     let error = "";
 
@@ -46,10 +55,14 @@ function Formulario() {
     if (name === "imagen") {
       const file = files[0];
 
-      setFormData((prev) => ({
-        ...prev,
-        imagen: file,
-      }));
+      if (file) {
+        setFormData((prev) => ({
+          ...prev,
+          imagen: file,
+        }));
+
+        setPreview(URL.createObjectURL(file));
+      }
 
       const fieldError = validateField(name, file);
 
@@ -74,7 +87,7 @@ function Formulario() {
     }));
   };
 
-  // 🔄 Validación global
+  //  Validación global
   useEffect(() => {
     const hasErrors = Object.values(errors).some((error) => error);
     const hasEmptyFields =
@@ -89,6 +102,28 @@ function Formulario() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const nuevaIncidencia = {
+    id: Date.now(),
+    titulo: formData.titulo,
+    descripcion: formData.descripcion,
+    imagen: preview,
+    userId: user.id, //  clave para filtrar después
+    matricula: user.matricula, //  para mostrar en el tablero
+    fecha: new Date().toLocaleDateString(),
+    estado: "Pendiente",
+    comentario: [],
+    };
+
+     const incidenciasGuardadas =
+        JSON.parse(localStorage.getItem("incidencias")) || [];
+
+      incidenciasGuardadas.push(nuevaIncidencia);
+
+      localStorage.setItem(
+        "incidencias",
+        JSON.stringify(incidenciasGuardadas)
+      );
 
     // Simulación de envío
     setTimeout(() => {

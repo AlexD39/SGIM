@@ -43,11 +43,8 @@ function Navbar() {
 
         {user?.rol === "admin" && (
           <>
-            <Link to="/admin/incidencias" className="navbar-button">
+            <Link to="/admin/dashboard" className="navbar-button">
               Gestionar incidencias
-            </Link>
-            <Link to="/admin/usuarios" className="navbar-button">
-              Usuarios
             </Link>
             <Link onClick={logout} to="/" className="navbar-button">
               Cerrar sesión
