@@ -143,7 +143,7 @@ function Login() {
 
         <form onSubmit={handleSubmit} noValidate aria-busy={loading}>
           <div className="form-group">
-            <label htmlFor="correo">Correo electrónico</label>
+            <label htmlFor="email">Correo electrónico</label>
             <input
               ref={refs.email}
               id="email"
@@ -152,7 +152,8 @@ function Login() {
               value={formData.email}
               onChange={handleChange}
               aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? "error-correo" : undefined}
+              aria-describedby={errors.email ? "error-email" : undefined}
+
             />
             {errors.email && (
               <span id="error-email" className="error" role="alert">
