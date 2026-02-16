@@ -44,14 +44,67 @@
   align-items: center;
 }
 
+/* Base */
 .estado {
-  background-color: #facc15;
-  padding: 4px 8px;
-  font-size: 0.75rem;
-  border-radius: 4px;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+/* Pendiente */
+.estado-pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* En proceso */
+.estado-en-proceso {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+/* Resuelto */
+.estado-resuelto {
+  background-color: #d4edda;
+  color: #155724;
 }
 
 .card-footer {
   font-size: 0.8rem;
   color: #666;
+}
+
+/* Comentarios visibles para el usuario */
+.comentarios-usuario {
+  margin-top: 1.2rem;
+  padding: 1rem;
+  background-color: #f8fbff;
+  border-left: 4px solid #1e88e5;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.comentarios-usuario h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1e88e5;
+}
+
+.lista-comentarios {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.comentario-item {
+  background: #ffffff;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }

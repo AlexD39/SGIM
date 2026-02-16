@@ -5,6 +5,10 @@ import { AuthContext } from "../context/authContext";
 import "../styles/formulario.css";
 
 function Formulario() {
+  useEffect(() => {
+    document.title = "SGIM | Reporte de incidencia";
+  }, []);
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -105,8 +109,10 @@ function Formulario() {
     descripcion: formData.descripcion,
     imagen: preview,
     userId: user.id, // 🔐 clave para filtrar después
+    matricula: user.matricula, // 🔐 para mostrar en el tablero
     fecha: new Date().toLocaleDateString(),
-    estado: "Pendiente"
+    estado: "Pendiente",
+    comentario: [],
     };
 
      const incidenciasGuardadas =

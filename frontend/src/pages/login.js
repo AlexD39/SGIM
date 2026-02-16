@@ -109,6 +109,7 @@ function Login() {
             id: 2,
             nombre: "Estudiante",
             rol: "user",
+            matricula: "20210001",
           });
 
           navigate("/tablero");
@@ -117,6 +118,7 @@ function Login() {
             id: 3,
             nombre: "Estudiante 2",
             rol: "user",
+            matricula: "20210002",
           });
 
           navigate("/tablero");
