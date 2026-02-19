@@ -28,11 +28,11 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/formulario" element={ <ProtectedRoute allowedRoles={["user"]}>
+          <Route path="/formulario" element={ <ProtectedRoute allowedRoles={["usuario"]}>
                   <Formulario /></ProtectedRoute>} />
           <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={["admin"]}>
                   <Dashboard /></ProtectedRoute>} />
-          <Route path="/tablero" element={<ProtectedRoute allowedRoles={["user"]}>
+          <Route path="/tablero" element={<ProtectedRoute allowedRoles={["usuario"]}>
                   <Tablero /></ProtectedRoute>} />
         </Routes>
       </main>
