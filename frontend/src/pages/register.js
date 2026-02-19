@@ -126,30 +126,54 @@ function Register() {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setGeneralError("");
-    setErrors({});
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setGeneralError("");
+  setErrors({});
 
-    const validationErrors = validate();
+  const validationErrors = validate();
+  if (Object.keys(validationErrors).length > 0) {
+    setErrors(validationErrors);
+    const firstErrorField = Object.keys(validationErrors)[0];
+    refs[firstErrorField].current.focus();
+    return;
+  }
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
+  setLoading(true);
 
-      const firstErrorField = Object.keys(validationErrors)[0];
-      refs[firstErrorField].current.focus();
+  try {
+    const full_name = `${formData.nombre} ${formData.apellido}`.trim();
+
+    const resp = await fetch("http://localhost:3001/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        full_name,
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
+
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      setGeneralError(data?.message || "No se pudo registrar");
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
+    // si quieres autologin al registrar:
+    // login({ user: data.user, token: data.token }); navigate("/tablero");
 
-    //aquí luego va el fetch real
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/login");
-    }, 1000);
-  };
+    setLoading(false);
+    navigate("/login");
+  } catch (err) {
+    setGeneralError("Error de red. Intenta de nuevo.");
+    setLoading(false);
+  }
+};
 
+  
   return (
     <main className="register-container">
 
