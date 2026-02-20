@@ -19,7 +19,7 @@ function Navbar() {
         {!user && (
           <>
             <Link to="/register" className="navbar-button">
-              Crear cuenta
+              Crear cuenta a
             </Link>
             <Link to="/login" className="navbar-button">
               Iniciar sesión
