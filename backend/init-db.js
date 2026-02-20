@@ -15,7 +15,7 @@ async function main() {
   });
 
   // ✅ SQL dentro de backend/
-  const sqlPath = path.join(__dirname, "database", "init.sql");
+  const sqlPath = path.join(__dirname, "init.sql");
   const sql = fs.readFileSync(sqlPath, "utf8");
 
   try {
