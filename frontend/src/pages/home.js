@@ -46,7 +46,7 @@ function Home() {
           <p>
             SGIM es un sistema diseñado para mejorar la comunicación entre
             estudiantes y la universidad, permitiendo reportar incidencias
-            relacionadas con infraestructura y serviciosss.
+            relacionadas con infraestructura y servicios.
           </p>
         </section>
       )}

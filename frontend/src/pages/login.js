@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
 import "../styles/login.css";
+const API = process.env.REACT_APP_API_URL;
 
 function Login() {
   useEffect(() => {
@@ -87,13 +88,20 @@ function Login() {
   }
   }, [generalError]);
 
+
   const handleSubmit = async (e) => {
   e.preventDefault();
   setGeneralError("");
   setLoading(true);
 
   try {
-    const resp = await fetch("http://localhost:3001/auth/login", {
+    if (!API) {
+      setGeneralError("Falta configurar REACT_APP_API_URL en el frontend.");
+      setLoading(false);
+      return;
+    }
+
+    const resp = await fetch(`${API}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -110,9 +118,7 @@ function Login() {
       return;
     }
 
-    // data = { token, user: { id,email,role } }
     login({ user: data.user, token: data.token });
-
     if (data.user.role === "admin") navigate("/admin/dashboard");
     else navigate("/tablero");
   } catch (err) {
@@ -120,7 +126,6 @@ function Login() {
     setLoading(false);
   }
 };
-
   
   return (
     <main className="login-container">
