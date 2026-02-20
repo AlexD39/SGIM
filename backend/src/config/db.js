@@ -7,10 +7,12 @@ const connectionString =
 
 const pool = new Pool({ connectionString });
 
-// Prueba de conexión inicial
-pool.query("SELECT NOW()", (err) => {
-  if (err) console.error("❌ Error conectando a PostgreSQL:", err.stack);
-  else console.log("🐘 Conectado a PostgreSQL exitosamente");
-});
+// Prueba de conexión inicial (omitir en test para no abrir conexión real ni logs tras tests)
+if (process.env.NODE_ENV !== "test") {
+  pool.query("SELECT NOW()", (err) => {
+    if (err) console.error("❌ Error conectando a PostgreSQL:", err.stack);
+    else console.log("🐘 Conectado a PostgreSQL exitosamente");
+  });
+}
 
 module.exports = pool;

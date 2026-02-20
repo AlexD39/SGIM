@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { mostrarError } from "../services/swal";
 import "../styles/tablero.css";
 
 function Tablero() {
@@ -11,18 +12,17 @@ function Tablero() {
   const [misIncidencias, setMisIncidencias] = useState([]);
 
   useEffect(() => {
-    const todas =
-      JSON.parse(localStorage.getItem("incidencias")) || [];
-
-    const filtradas = todas.filter(
-      (inc) => inc.userId === user.id
-    );
-
-    const ordenadas = [...filtradas].sort(
-      (a, b) => b.id - a.id
-    );
-
-    setMisIncidencias(ordenadas);
+    try {
+      const raw = localStorage.getItem("incidencias");
+      const todas = raw ? JSON.parse(raw) : [];
+      const filtradas = (Array.isArray(todas) ? todas : []).filter(
+        (inc) => inc.userId === user?.id
+      );
+      const ordenadas = [...filtradas].sort((a, b) => (b.id || 0) - (a.id || 0));
+      setMisIncidencias(ordenadas);
+    } catch (e) {
+      mostrarError("Error al cargar datos", "No se pudieron cargar tus incidencias. Intenta recargar la página.");
+    }
   }, [user]);
 
   return (

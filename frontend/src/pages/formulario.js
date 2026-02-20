@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { mostrarExito } from "../services/swal";
 import "../styles/formulario.css";
 
 function Formulario() {
@@ -23,8 +24,6 @@ function Formulario() {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  
 
   // Validaciones
   const validateField = (name, value) => {
@@ -128,11 +127,9 @@ function Formulario() {
     // Simulación de envío
     setTimeout(() => {
       setLoading(false);
-      setSuccessMessage("Incidencia enviada correctamente");
-
-      setTimeout(() => {
+      mostrarExito("Listo", "Incidencia enviada correctamente.").then(() => {
         navigate("/tablero");
-      }, 3000);
+      });
     }, 1500);
   };
 
@@ -140,12 +137,6 @@ function Formulario() {
     <main className="form-container">
       <div className="form-card">
         <h2>Reportar Incidencia</h2>
-
-        {successMessage && (
-          <div className="success-message" role="alert">
-            {successMessage}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">

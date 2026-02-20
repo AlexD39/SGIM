@@ -1,5 +1,5 @@
 const request = require("supertest");
-const { createApp } = require("../api/app");
+const { createApp } = require("../src/api/app");
 
 describe("Route tests (200 / 404 / 500)", () => {
   let app;

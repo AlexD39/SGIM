@@ -19,12 +19,9 @@ describe("Interacciones por teclado: navegación", () => {
 
     // Tab hasta llegar al link
     for (let i = 0; i < 30; i++) {
-  await userEvent.tab();
-  if (loginLink.matches(":focus")) break;
-}
-expect(loginLink).toHaveFocus();
-
-
+      await userEvent.tab();
+      if (loginLink.matches(":focus")) break;
+    }
     expect(loginLink).toHaveFocus();
 
     const onClick = jest.fn();
