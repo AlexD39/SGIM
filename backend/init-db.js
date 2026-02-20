@@ -14,19 +14,18 @@ async function main() {
     ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
   });
 
-  const sqlPath = path.join(__dirname, "..", "database", "sgim_init.sql");
+  // ✅ SQL dentro de backend/
+  const sqlPath = path.join(__dirname, "database", "init.sql");
   const sql = fs.readFileSync(sqlPath, "utf8");
 
   try {
     await client.connect();
     console.log("✅ Conectado a Postgres");
-
     await client.query(sql);
     console.log("✅ SQL ejecutado: tablas y seed listos");
   } catch (err) {
     console.error("❌ Error ejecutando SQL:", err.message);
-    console.error(err);
-    process.exitCode = 1;
+    process.exit(1);
   } finally {
     await client.end();
   }
