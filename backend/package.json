@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node src/api/server.js",
     "test": "cross-env NODE_ENV=test jest",
-    "dev": "node src/api/server.js"
+    "dev": "node src/api/server.js",
+    "db:init": "node init-db.js"
   },
   "keywords": [],
   "author": "",
