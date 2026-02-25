@@ -17,12 +17,24 @@ const CONFIRM_BUTTON_COLOR = "#008d71";
  * @param {string} mensaje - Texto del error (ej. mensaje del API o genérico)
  */
 export function mostrarError(titulo, mensaje) {
+  const reduceMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   return Swal.fire({
     icon: "error",
     title: titulo,
     text: mensaje || "Ha ocurrido un error. Intenta de nuevo.",
     confirmButtonText: "Entendido",
     confirmButtonColor: CONFIRM_BUTTON_COLOR,
+    // Animación accesible: solo si el usuario NO pide reducir movimiento
+    ...(reduceMotion
+      ? {}
+      : {
+          showClass: { popup: "swal2-motion-in" },
+          hideClass: { popup: "swal2-motion-out" },
+        }),
   });
 }
 
@@ -32,12 +44,23 @@ export function mostrarError(titulo, mensaje) {
  * @param {string} mensaje - Texto (ej. "Incidencia enviada correctamente")
  */
 export function mostrarExito(titulo, mensaje) {
+  const reduceMotion =
+    typeof window !== "undefined" &&
+    window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   return Swal.fire({
     icon: "success",
     title: titulo,
     text: mensaje,
     confirmButtonText: "Entendido",
     confirmButtonColor: CONFIRM_BUTTON_COLOR,
+    ...(reduceMotion
+      ? {}
+      : {
+          showClass: { popup: "swal2-motion-in" },
+          hideClass: { popup: "swal2-motion-out" },
+        }),
   });
 }
 
