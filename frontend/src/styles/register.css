@@ -83,6 +83,8 @@ button {
   border-radius: 5px;
   background-color: #008d71;
   color: #ffffff;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 button:disabled {
@@ -90,6 +92,12 @@ button:disabled {
   cursor: not-allowed;
   background-color: #539c8d;
   color:#ffffff;
+}
+
+button:not(:disabled):hover,
+button:not(:disabled):focus-visible {
+  background-color: #006651;
+  transform: translateY(-1px);
 }
 
 @media (max-width: 600px) {
