@@ -2,3 +2,48 @@
   background-color: #e5e7e8;
   padding: 0.5rem;
 }
+
+/* ------------------------------
+   Animaciones globales accesibles
+   ------------------------------ */
+
+/* SweetAlert2: animación suave de entrada/salida del popup
+   Solo se aplica cuando NO hay prefers-reduced-motion: reduce
+   (la lógica de JS en swal.js evita usar estas clases en ese caso). */
+
+@keyframes motion-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-fade-out-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.swal2-popup.swal2-motion-in {
+  animation: motion-fade-in-up 180ms ease-out;
+}
+
+.swal2-popup.swal2-motion-out {
+  animation: motion-fade-out-down 150ms ease-in forwards;
+}
+
+/* Mensajes de estado (role="status") con pequeña transición de opacidad.
+   Pensado para loaders y mensajes de feedback sin sobre-animar. */
+[role="status"] {
+  transition: opacity 150ms ease;
+}
+
