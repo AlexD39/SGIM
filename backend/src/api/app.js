@@ -42,6 +42,9 @@ app.use(cors({
   // ✅ Health Check
   app.get("/health", (req, res) => res.status(200).json({ ok: true }));
 
+  // Ruta solo para tests (500 con traceId)
+  app.get("/__test__/boom", (req, res, next) => next(new Error("boom")));
+
   // ✅ LOGIN (Conectado a PostgreSQL)
   // Asegúrate que en Thunder Client envías un JSON con "email" y "password"
   app.post("/auth/register", register);
@@ -81,15 +84,21 @@ app.use(cors({
 
   // ✅ Manejo de errores 404
   app.use((req, res) => {
-    res.status(404).json({ error: "not_found", message: "Ruta no encontrada" });
+    res.status(404).json({
+      error: "not_found",
+      message: "Ruta no encontrada",
+      path: req.originalUrl || req.path,
+    });
   });
 
   // ✅ Manejo de errores 500
   app.use((err, req, res, next) => {
     console.error("🔴 Error en el servidor:", err.message);
+    const traceId = req.headers["x-trace-id"] || null;
     res.status(500).json({
       error: "internal_error",
       message: "Algo salió mal en el servidor.",
+      ...(traceId && { traceId }),
     });
   });
 

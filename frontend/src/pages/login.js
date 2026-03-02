@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { mostrarError } from "../services/swal";
 import "../styles/login.css";
 
 function Login() {
@@ -19,7 +20,6 @@ function Login() {
   });
 
   const [errors, setErrors] = useState({});
-  const [generalError, setGeneralError] = useState("");
   const [loading, setLoading] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -27,8 +27,6 @@ function Login() {
     email: useRef(null),
     password: useRef(null),
   };
-
-  const generalErrorRef = useRef(null);
 
   const validateField = (name, value) => {
     let error = "";
@@ -128,15 +126,9 @@ function Login() {
       <div className="login-card">
         <h2>Iniciar sesión</h2>
 
-        {generalError && (
-          <div ref={generalErrorRef} className="error-general" role="alert" aria-live="assertive" tabIndex="-1">
-            {generalError}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} noValidate aria-busy={loading}>
           <div className="form-group">
-            <label htmlFor="correo">Correo electrónico</label>
+            <label htmlFor="email">Correo electrónico</label>
             <input
               ref={refs.email}
               id="email"
@@ -145,7 +137,8 @@ function Login() {
               value={formData.email}
               onChange={handleChange}
               aria-invalid={!!errors.email}
-              aria-describedby={errors.email ? "error-correo" : undefined}
+              aria-describedby={errors.email ? "error-email" : undefined}
+
             />
             {errors.email && (
               <span id="error-email" className="error" role="alert">
