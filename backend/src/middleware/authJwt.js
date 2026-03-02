@@ -11,7 +11,7 @@ function authRequired(req, res, next) {
   try {
     // Agregamos un "o secreto_para_el_mvp" por seguridad si el .env falla
     const payload = jwt.verify(token, process.env.JWT_SECRET || 'secreto_para_el_mvp');
-    req.user = payload; // Aquí vienen { sub, role, email }
+    req.user = { ...payload, sub: payload.sub || payload.id };
     return next();
   } catch (e) {
     return res.status(401).json({ error: "unauthorized", message: "Token inválido o expirado" });
