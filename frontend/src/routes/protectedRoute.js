@@ -5,13 +5,9 @@ import { AuthContext } from "../context/authContext";
 function ProtectedRoute({ children, allowedRoles }) {
   const { user } = useContext(AuthContext);
 
-  // Si no está logueado
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" replace />;
 
-  // Si el rol no está permitido
-  if (!allowedRoles.includes(user.rol)) {
+  if (!allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
 

@@ -68,47 +68,58 @@ function Login() {
     setIsFormValid(!hasErrors && !hasEmptyFields);
   }, [errors, formData]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
+  useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key === "Escape") {
+      setGeneralError("");
+      } 
+    };
 
-    //aquí luego va el login real
-    setTimeout(() => {
-      // Simulación básica de JWT
-        if (formData.email === "admin@sgim.com" && formData.password === "123456") {
-          login({
-            id: 1,
-            nombre: "Administrador",
-            rol: "admin",
-          });
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
 
-          navigate("/admin/dashboard");
-        } 
-        else if (formData.email === "estudiante@sgim.com" && formData.password === "123456") {
-          login({
-            id: 2,
-            nombre: "Estudiante",
-            rol: "user",
-            matricula: "20210001",
-          });
+  useEffect(() => {
+  if (generalError && generalErrorRef.current) {
+    generalErrorRef.current.focus();
+  }
+  }, [generalError]);
 
-          navigate("/tablero");
-        } else if (formData.email === "estudiante2@sgim.com" && formData.password === "123456") {
-          login({
-            id: 3,
-            nombre: "Estudiante 2",
-            rol: "user",
-            matricula: "20210002",
-          });
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setGeneralError("");
+  setLoading(true);
 
-          navigate("/tablero");
-        } else {
-          setLoading(false);
-          mostrarError("Error al iniciar sesión", "Correo o contraseña incorrectos.");
-        }
-    }, 1000);
-  };
+  try {
+    const resp = await fetch("http://localhost:3001/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
 
+    const data = await resp.json();
+
+    if (!resp.ok) {
+      setGeneralError(data?.message || "No se pudo iniciar sesión");
+      setLoading(false);
+      return;
+    }
+
+    // data = { token, user: { id,email,role } }
+    login({ user: data.user, token: data.token });
+
+    if (data.user.role === "admin") navigate("/admin/dashboard");
+    else navigate("/tablero");
+  } catch (err) {
+    setGeneralError("Error de red. Intenta de nuevo.");
+    setLoading(false);
+  }
+};
+
+  
   return (
     <main className="login-container">
 
