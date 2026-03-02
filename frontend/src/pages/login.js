@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { useContext } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
 import { mostrarError } from "../services/swal";
 import "../styles/login.css";
@@ -11,7 +10,6 @@ function Login() {
   }, []);
 
   const { login } = useContext(AuthContext);
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -68,61 +66,57 @@ function Login() {
     setIsFormValid(!hasErrors && !hasEmptyFields);
   }, [errors, formData]);
 
-  useEffect(() => {
-  const handleKeyDown = (e) => {
-    if (e.key === "Escape") {
-      setGeneralError("");
-      } 
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-    }, []);
+    // ✅ MISMO DELAY / MISMA ANIMACIÓN QUE ANTES
+    setTimeout(async () => {
+      try {
+        const resp = await fetch("http://localhost:3001/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
 
-  useEffect(() => {
-  if (generalError && generalErrorRef.current) {
-    generalErrorRef.current.focus();
-  }
-  }, [generalError]);
+        // ✅ Si el backend no manda JSON, no revienta
+        const data = await resp.json().catch(() => ({}));
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setGeneralError("");
-  setLoading(true);
+        if (!resp.ok) {
+          setLoading(false);
+          mostrarError(
+            "Error al iniciar sesión",
+            data?.message || "Correo o contraseña incorrectos."
+          );
+          return;
+        }
 
-  try {
-    const resp = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
-    });
+        // ✅ Aquí depende de tu backend:
+        // Esperado: data = { token, user: { id, nombre, role/rol, ... } }
+        // Si tu backend manda distinto, lo ajustamos.
+        const user = data.user ?? data.usuario ?? data;
+        const token = data.token ?? data.accessToken ?? data.jwt;
 
-    const data = await resp.json();
+        // ✅ Mantén tu AuthContext como lo estés usando:
+        // Si tu AuthContext esperaba SOLO user, usa: login(user)
+        // Si esperaba user+token, usa esto:
+        login({ user, token });
 
-    if (!resp.ok) {
-      setGeneralError(data?.message || "No se pudo iniciar sesión");
-      setLoading(false);
-      return;
-    }
+        const role = user?.role || user?.rol;
+        if (role === "admin") navigate("/admin/dashboard");
+        else navigate("/tablero");
+      } catch (err) {
+        setLoading(false);
+        mostrarError("Error de red", "No se pudo conectar al servidor.");
+      }
+    }, 1000);
+  };
 
-    // data = { token, user: { id,email,role } }
-    login({ user: data.user, token: data.token });
-
-    if (data.user.role === "admin") navigate("/admin/dashboard");
-    else navigate("/tablero");
-  } catch (err) {
-    setGeneralError("Error de red. Intenta de nuevo.");
-    setLoading(false);
-  }
-};
-
-  
   return (
     <main className="login-container">
-
       <div className="login-card">
         <h2>Iniciar sesión</h2>
 
@@ -138,7 +132,6 @@ function Login() {
               onChange={handleChange}
               aria-invalid={!!errors.email}
               aria-describedby={errors.email ? "error-email" : undefined}
-
             />
             {errors.email && (
               <span id="error-email" className="error" role="alert">
