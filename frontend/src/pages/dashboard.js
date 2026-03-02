@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { mostrarError } from "../services/swal";
 import "../styles/dashboard.css";
 
 function Dashboard() {
@@ -12,14 +13,16 @@ function Dashboard() {
   const [filtro, setFiltro] = useState("Todos");
 
   useEffect(() => {
-    const todas =
-      JSON.parse(localStorage.getItem("incidencias")) || [];
-
-    const ordenadas = [...todas].sort(
-      (a, b) => b.id - a.id
-    );
-
-    setIncidencias(ordenadas);
+    try {
+      const raw = localStorage.getItem("incidencias");
+      const todas = raw ? JSON.parse(raw) : [];
+      const ordenadas = [...(Array.isArray(todas) ? todas : [])].sort(
+        (a, b) => (b.id || 0) - (a.id || 0)
+      );
+      setIncidencias(ordenadas);
+    } catch (e) {
+      mostrarError("Error al cargar datos", "No se pudieron cargar las incidencias. Intenta recargar la página.");
+    }
   }, []);
 
   const handleEstadoChange = (id, nuevoEstado) => {

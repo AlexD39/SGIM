@@ -47,17 +47,18 @@
 }
 
 .custom-file-button {
-  background-color: #2563eb;
+  background-color: #008d71;
   color: white;
   padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .custom-file-button:hover {
-  background-color: #1e4ed8;
+  background-color: #006651;
+  transform: translateY(-1px);
 }
 
 .file-name {

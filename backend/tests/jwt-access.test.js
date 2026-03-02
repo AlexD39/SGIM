@@ -1,5 +1,10 @@
 const request = require("supertest");
-const { createApp } = require("../api/app");
+
+jest.mock("../src/config/db", () => ({ query: jest.fn() }));
+jest.mock("bcrypt", () => ({ ...jest.requireActual("bcrypt"), compare: jest.fn().mockResolvedValue(true) }));
+
+const db = require("../src/config/db");
+const { createApp } = require("../src/api/app");
 
 describe("JWT access control (public/private/roles)", () => {
   let app;
@@ -8,6 +13,12 @@ describe("JWT access control (public/private/roles)", () => {
     process.env.NODE_ENV = "test";
     process.env.JWT_SECRET = "test_secret";
     process.env.JWT_EXPIRES = "1h";
+    db.query.mockImplementation((sql, params) => {
+      const email = params && params[0];
+      if (email === "user@sgim.com") return Promise.resolve({ rows: [{ id: 1, email: "user@sgim.com", role: "user", password: "hash" }] });
+      if (email === "admin@sgim.com") return Promise.resolve({ rows: [{ id: 2, email: "admin@sgim.com", role: "admin", password: "hash" }] });
+      return Promise.resolve({ rows: [] });
+    });
     app = createApp();
   });
 
