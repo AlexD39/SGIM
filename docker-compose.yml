@@ -14,7 +14,7 @@ services:
       PORT: 3000
       DATABASE_URL: postgresql://${POSTGRES_USER:-sgim}:${POSTGRES_PASSWORD:-sgim}@db:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-sgim}
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       db:
         condition: service_healthy

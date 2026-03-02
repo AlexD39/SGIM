@@ -6,7 +6,16 @@ const { authRequired, requireRole } = require("../middleware/authJwt");
 const upload = require("../middleware/upload");
 // ✅ Controladores integrados
 const { login } = require("../modules/authController"); 
-const { crearReporte } = require("../modules/reportsController");
+//const { crearReporte } = require("../modules/reportsController");
+
+  const {
+  crearReporte,
+  misReportes,
+  obtenerReporte,
+  listarAdmin,
+  cambiarEstado,
+} = require("../modules/reportsController");
+
 
 function createApp() {
   const app = express();
@@ -35,21 +44,37 @@ function createApp() {
 
   // ✅ REPORTES (MODIFICADO PARA IMÁGENES)
   // Añadimos 'upload.single('evidencia')' para que acepte la foto
-  app.post("/reports", authRequired, upload.single('evidencia'), crearReporte);
+  ///app.post("/reports", authRequired, upload.single('evidencia'), crearReporte);
 
   // ✅ OTRAS RUTAS DE REPORTES
-  app.get("/reports/mine", authRequired, (req, res) => {
+  /*app.get("/reports/mine", authRequired, (req, res) => {
     res.status(200).json({ data: [] });
   });
 
   app.get("/reports/:id", authRequired, (req, res) => {
     res.status(200).json({ id: req.params.id, status: "pendiente" });
   });
+  */
 
   // ✅ RUTAS DE ADMINISTRADOR
-  app.get("/admin/reports", authRequired, requireRole("admin"), (req, res) => {
+  /*app.get("/admin/reports", authRequired, requireRole("admin"), (req, res) => {
     res.status(200).json({ data: [] });
-  });
+  });*/
+
+// crear
+app.post("/reports", authRequired, upload.single("evidencia"), crearReporte);
+
+// mine
+app.get("/reports/mine", authRequired, misReportes);
+
+// get 1
+app.get("/reports/:id", authRequired, obtenerReporte);
+
+// admin list
+app.get("/admin/reports", authRequired, requireRole("admin"), listarAdmin);
+
+// admin status
+app.patch("/admin/reports/:id/status", authRequired, requireRole("admin"), cambiarEstado);
 
   app.patch("/admin/reports/:id/status", authRequired, requireRole("admin"), (req, res) => {
     const { status } = req.body || {};
