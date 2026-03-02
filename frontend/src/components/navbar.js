@@ -27,7 +27,7 @@ function Navbar() {
           </>
         )}
 
-        {user?.rol === "user" && (
+        {user?.role === "usuario" && (
           <>
             <Link to="/formulario" className="navbar-button">
               Reportar incidencia
@@ -41,7 +41,7 @@ function Navbar() {
           </>
         )}
 
-        {user?.rol === "admin" && (
+        {user?.role === "admin" && (
           <>
             <Link to="/admin/dashboard" className="navbar-button">
               Gestionar incidencias
