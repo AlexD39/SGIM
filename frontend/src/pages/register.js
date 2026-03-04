@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { mostrarExito } from "../services/swal";
 import "../styles/register.css";
 
 function Register() {
@@ -143,11 +144,16 @@ function Register() {
 
     setLoading(true);
 
-    //aquí luego va el fetch real
+    // Simulación de llamada asíncrona (luego será el fetch real)
     setTimeout(() => {
       setLoading(false);
-      navigate("/login");
-    }, 1000);
+      mostrarExito(
+        "Cuenta creada",
+        "Tu cuenta se creó correctamente. Puedes iniciar sesión."
+      ).then(() => {
+        navigate("/login");
+      });
+    }, 800);
   };
 
   return (
@@ -162,7 +168,7 @@ function Register() {
 
       <div className="register-card">
          <h2>Crear cuenta</h2>
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate aria-busy={loading}>
         <div className="form-grid">
         {/* Nombre */}
         <div className="form-group">

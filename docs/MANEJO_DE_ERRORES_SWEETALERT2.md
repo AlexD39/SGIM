@@ -14,6 +14,7 @@ SweetAlert2 es accesible (WAI-ARIA) y sustituye `alert()` y mensajes inline en c
 |--------|-----|
 | `Frontend/src/services/swal.js` | Servicio central: `mostrarError`, `mostrarExito`, `mostrarErrorRed`. |
 | `Frontend/src/pages/login.js` | Error de credenciales incorrectas → `mostrarError("Error al iniciar sesión", ...)`. |
+| `Frontend/src/pages/register.js` | Éxito al crear cuenta → `mostrarExito("Cuenta creada", "Tu cuenta se creó correctamente. Puedes iniciar sesión.")` y redirección a login. |
 | `Frontend/src/pages/formulario.js` | Éxito al enviar incidencia → `mostrarExito("Listo", "Incidencia enviada correctamente.")` y redirección a tablero. |
 | `Frontend/src/pages/tablero.js` | Error al leer/cargar incidencias (p. ej. localStorage corrupto) → `mostrarError("Error al cargar datos", ...)`. |
 | `Frontend/src/pages/dashboard.js` | Error al cargar listado de incidencias → `mostrarError("Error al cargar datos", ...)`. |
