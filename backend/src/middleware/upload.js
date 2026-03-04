@@ -1,17 +1,31 @@
-const multer = require('multer');
-const path = require('path');
+// src/middleware/upload.js
+const multer = require("multer");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary");
 
-// Configuración de dónde y cómo se guarda el archivo
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Asegúrate de que esta carpeta exista
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: process.env.CLOUDINARY_FOLDER || "sgim/reportes",
+      resource_type: "image",
+      allowed_formats: ["jpg", "jpeg", "png", "webp"],
+      // opcional: para evitar nombres raros
+      public_id: `${Date.now()}-${file.originalname.replace(/\.[^/.]+$/, "")}`,
+    };
   },
-  filename: (req, file, cb) => {
-    // Nombre único: fecha + nombre original
-    cb(null, `${Date.now()}-${file.originalname}`);
-  }
 });
 
-const upload = multer({ storage });
+const fileFilter = (req, file, cb) => {
+  const ok = ["image/jpeg", "image/png", "image/webp"].includes(file.mimetype);
+  if (!ok) return cb(new Error("Formato no permitido. Usa JPG/PNG/WEBP."), false);
+  cb(null, true);
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+});
 
 module.exports = upload;

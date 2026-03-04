@@ -13,6 +13,8 @@ const {
   obtenerReporte,
   listarAdmin,
   cambiarEstado,
+  subirAttachment,
+  listarAttachments,
 } = require("../modules/reportsController");
 
 function createApp() {
@@ -59,6 +61,10 @@ app.use(cors({
   app.post("/reports", authRequired, crearReporte);
   app.get("/reports/mine", authRequired, misReportes);
   app.get("/reports/:id", authRequired, obtenerReporte);
+
+  // Attachments (usuario dueño o admin)
+app.post("/reports/:id/attachments", authRequired, upload.single("file"), subirAttachment);
+app.get("/reports/:id/attachments", authRequired, listarAttachments);
 
   // admin
   app.get("/admin/reports", authRequired, requireRole("admin"), listarAdmin);

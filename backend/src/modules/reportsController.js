@@ -106,4 +106,75 @@ const cambiarEstado = async (req, res) => {
   }
 };
 
-module.exports = { crearReporte, misReportes, obtenerReporte, listarAdmin, cambiarEstado };
+async function assertCanAccessReport({ reportId, userId, role }) {
+  const r = await pool.query(`SELECT * FROM reports WHERE id = $1`, [reportId]);
+  const report = r.rows[0];
+  if (!report) return { ok: false, status: 404, body: { error: "not_found", message: "Reporte no encontrado" } };
+
+  const isOwner = report.reporter_id === userId;
+  const isAdmin = role === "admin";
+  if (!isOwner && !isAdmin) {
+    return { ok: false, status: 403, body: { error: "forbidden", message: "No autorizado" } };
+  }
+
+  return { ok: true, report };
+}
+
+// ✅ Subir 1 imagen y guardarla como attachment en DB
+const subirAttachment = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+    const userId = req.user.sub;
+    const role = req.user.role;
+
+    const access = await assertCanAccessReport({ reportId, userId, role });
+    if (!access.ok) return res.status(access.status).json(access.body);
+
+    if (!req.file) {
+      return res.status(400).json({ error: "bad_request", message: "Archivo requerido (field: file)" });
+    }
+
+    // Cloudinary (multer-storage-cloudinary):
+    // req.file.path => URL pública
+    // req.file.filename => public_id
+    const fileUrl = req.file.path;
+    const publicId = req.file.filename; // lo guardamos como "file_name" para poder borrar después si quieres
+    const contentType = req.file.mimetype;
+
+    const ins = await pool.query(
+      `INSERT INTO attachments (report_id, file_name, file_url, content_type)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [reportId, publicId, fileUrl, contentType]
+    );
+
+    return res.status(201).json({ status: "success", data: ins.rows[0] });
+  } catch (err) {
+    console.error("Error subirAttachment:", err);
+    return res.status(500).json({ error: "server_error", message: "Error al subir archivo" });
+  }
+};
+
+const listarAttachments = async (req, res) => {
+  try {
+    const reportId = req.params.id;
+    const userId = req.user.sub;
+    const role = req.user.role;
+
+    const access = await assertCanAccessReport({ reportId, userId, role });
+    if (!access.ok) return res.status(access.status).json(access.body);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM attachments WHERE report_id = $1 ORDER BY uploaded_at DESC`,
+      [reportId]
+    );
+
+    return res.status(200).json({ status: "success", data: rows });
+  } catch (err) {
+    console.error("Error listarAttachments:", err);
+    return res.status(500).json({ error: "server_error", message: "Error al listar attachments" });
+  }
+};
+
+
+module.exports = { crearReporte, misReportes, obtenerReporte, listarAdmin, cambiarEstado, subirAttachment, listarAttachments};
