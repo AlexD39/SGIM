@@ -2,9 +2,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { authRequired, requireRole } = require("../middleware/authJwt");
-// ✅ Importamos Multer (el middleware de subida)
 const upload = require("../middleware/upload");
-// ✅ Controladores integrados
 const { login, register } = require("../modules/authController"); 
 const { crearReporte } = require("../modules/reportsController");
 const cors = require("cors");
@@ -25,28 +23,14 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   methods: ["GET","POST","PATCH","PUT","DELETE","OPTIONS"],
 }));
-
-
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
   
-
-  // 🛠️ MÁXIMA IMPORTANCIA: Estas líneas deben ir ANTES de las rutas
   app.use(express.json()); // ✅ Permite leer JSON (Fundamental para el Login)
   app.use(express.urlencoded({ extended: true })); // ✅ Permite leer Form-data de texto
   
-  // ✅ Servir la carpeta de subidas para poder ver las fotos en el navegador
-  app.use('/uploads', express.static('uploads'));
-
-  // ✅ Health Check
-  app.get("/health", (req, res) => res.status(200).json({ ok: true }));
-
-  // Ruta solo para tests (500 con traceId)
+  app.get("/health", (req, res) => res.status(200).json({ ok: true }));  
   app.get("/__test__/boom", (req, res, next) => next(new Error("boom")));
 
-  // ✅ LOGIN (Conectado a PostgreSQL)
-  // Asegúrate que en Thunder Client envías un JSON con "email" y "password"
+  // ✅ LOGIN (Conectado a PostgreSQL)  
   app.post("/auth/register", register);
   app.post("/auth/login", login); 
 

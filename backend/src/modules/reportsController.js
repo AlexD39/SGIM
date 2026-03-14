@@ -1,26 +1,68 @@
-const pool = require('../config/db');
+const pool = require("../config/db");
+const { uploadBufferToCloudinary } = require("./cloudinaryHelper");
 
 const crearReporte = async (req, res) => {
-    const { titulo, descripcion, ubicacion, prioridad } = req.body;
-    // El usuario_id viene del Token JWT
-    const usuario_id = req.user.sub; 
+  const client = await pool.connect();
 
-    // ✅ Obtenemos la ruta del archivo si el usuario subió una foto
-    // Si no subió nada, quedará como null
-    const foto_url = req.file ? `/uploads/${req.file.filename}` : null;
+  try {
+    const { title, description } = req.body;
+    const reporter_id = req.user.id;
 
-    try {
-        // ✅ Añadimos la columna foto_url al INSERT
-        const nuevoReporte = await pool.query(
-            'INSERT INTO incidencias (titulo, descripcion, ubicacion, prioridad, usuario_id, foto_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [titulo, descripcion, ubicacion, prioridad || 'media', usuario_id, foto_url]
-        );
-        
-        res.status(201).json(nuevoReporte.rows[0]);
-    } catch (err) {
-        console.error("Error al guardar reporte:", err);
-        res.status(500).json({ error: "Error al guardar el reporte en la base de datos" });
+    if (!title || !title.trim()) {
+      return res.status(400).json({
+        error: "bad_request",
+        message: "El campo title es obligatorio"
+      });
     }
+
+    await client.query("BEGIN");
+
+    const reportResult = await client.query(
+      `INSERT INTO reports (title, description, reporter_id)
+       VALUES ($1, $2, $3)
+       RETURNING *`,
+      [title.trim(), description || null, reporter_id]
+    );
+
+    const report = reportResult.rows[0];
+    let attachment = null;
+
+    if (req.file) {
+      const uploadedImage = await uploadBufferToCloudinary(req.file.buffer);
+
+      const attachmentResult = await client.query(
+        `INSERT INTO attachments (report_id, file_name, file_url, content_type)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [
+          report.id,
+          uploadedImage.public_id,
+          uploadedImage.secure_url,
+          req.file.mimetype
+        ]
+      );
+
+      attachment = attachmentResult.rows[0];
+    }
+
+    await client.query("COMMIT");
+
+    return res.status(201).json({
+      ok: true,
+      report,
+      attachment
+    });
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error al crear reporte:", err);
+
+    return res.status(500).json({
+      error: "internal_error",
+      message: "Error al guardar el reporte"
+    });
+  } finally {
+    client.release();
+  }
 };
 
 module.exports = { crearReporte };
