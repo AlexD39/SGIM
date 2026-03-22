@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("../config/db");
+const { v4: uuidv4 } = require("uuid");
 
 const login = async (req, res) => {
   try {
@@ -13,6 +14,7 @@ const login = async (req, res) => {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
 
+    // 🔒 Mensaje genérico
     if (!user) {
       return res.status(401).json({ error: "unauthorized", message: "Credenciales inválidas" });
     }
@@ -22,19 +24,30 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "unauthorized", message: "Credenciales inválidas" });
     }
 
+    // 🔥 NUEVO: generar jti (ID único de sesión)
+    const jti = uuidv4();
+
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role, jti }, // 👈 agregamos jti
       process.env.JWT_SECRET || "secret_key",
       { expiresIn: process.env.JWT_EXPIRES || "8h" }
+    );
+
+    // 🔥 NUEVO: guardar sesión en PostgreSQL
+    await pool.query(
+      `INSERT INTO sessions (user_id, jti, user_agent, ip)
+       VALUES ($1, $2, $3, $4)`,
+      [user.id, jti, req.headers["user-agent"], req.ip]
     );
 
     return res.json({
       token,
       user: { id: user.id, email: user.email, role: user.role }
     });
+
   } catch (error) {
     console.error("🔴 ERROR EN LOGIN:", error);
-    return res.status(500).json({ error: "server_error", message: error.message });
+    return res.status(500).json({ error: "server_error", message: "Error interno" });
   }
 };
 
@@ -77,5 +90,45 @@ const register = async (req, res) => {
   }
 };
 
+const getSessions = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, jti, user_agent, ip, created_at
+       FROM sessions
+       WHERE user_id = $1 AND is_active = true`,
+      [req.user.id]
+    );
 
-module.exports = { login, register };
+    return res.json(result.rows);
+  } catch (error) {
+    return res.status(500).json({ error: "server_error", message: "Error interno" });
+  }
+};
+
+const logout = async (req, res) => {
+  try {
+    await pool.query(
+      `UPDATE sessions SET is_active = false WHERE jti = $1`,
+      [req.session.jti]
+    );
+
+    return res.json({ message: "Sesión cerrada" });
+  } catch (error) {
+    return res.status(500).json({ error: "server_error", message: "Error interno" });
+  }
+};
+
+const logoutAll = async (req, res) => {
+  try {
+    await pool.query(
+      `UPDATE sessions SET is_active = false WHERE user_id = $1`,
+      [req.user.id]
+    );
+
+    return res.json({ message: "Todas las sesiones cerradas" });
+  } catch (error) {
+    return res.status(500).json({ error: "server_error", message: "Error interno" });
+  }
+};
+
+module.exports = { login, register, getSessions, logout, logoutAll };
