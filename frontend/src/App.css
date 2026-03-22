@@ -47,3 +47,82 @@
   transition: opacity 150ms ease;
 }
 
+/* ------------------------------------------------
+   GESTIÓN DE SESIONES (COHERENTE CON TU ESTILO)
+   ------------------------------------------------ */
+
+.session-management-section {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+  background: white; /* Resalta sobre tu #e5e7e8 */
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border-left: 4px solid #1e88e5; /* Azul de tu tablero */
+  animation: motion-fade-in-up 200ms ease-out; /* Usando tu animación */
+}
+
+.auth-error-msg {
+  background-color: #fff5f5;
+  color: #c53030;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #feb2b2;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Accesibilidad: anuncio visual suave */
+  animation: motion-fade-in-up 150ms ease-out;
+}
+
+.btn-logout-others {
+  background-color: transparent;
+  color: #d32f2f;
+  border: 1.5px solid #d32f2f;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-logout-others:hover:not(:disabled) {
+  background-color: #d32f2f;
+  color: white;
+}
+
+/* Mejora de accesibilidad para navegación por teclado */
+.btn-logout-others:focus-visible {
+  outline: 3px solid #feb2b2;
+  outline-offset: 2px;
+}
+
+.btn-logout-others:disabled, .btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+.session-help-text {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 1.2rem;
+  display: block;
+}
+
+/* Clase para ocultar texto solo visualmente (A11y) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

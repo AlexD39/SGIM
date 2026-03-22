@@ -4,18 +4,25 @@ import { Link } from "react-router-dom";
 import "./navbar.css";
 
 function Navbar() {
-  const { user, logout } = useContext(AuthContext);
+  // Añadimos loading y sessionError para dar feedback en el Navbar
+  const { user, logout, loading, sessionError } = useContext(AuthContext);
 
   return (
     <nav className="navbar" aria-label="Navegación principal">
       <div className="navbar-left">
         <Link to="/" aria-label="Ir al inicio">
-           <img src = "/logoUTT.png" alt="Logo de la universidad" className="navbar-logo"/>
+          <img src="/logoUTT.png" alt="Logo de la universidad" className="navbar-logo" />
         </Link>
       </div>
 
       <div className="navbar-right">
-        
+        {/* Muestra un error visual si el logout falla, usando accesibilidad aria-live */}
+        {sessionError && (
+          <span className="sr-only" role="alert" aria-live="polite">
+            {sessionError}
+          </span>
+        )}
+
         {!user && (
           <>
             <Link to="/register" className="navbar-button">
@@ -35,8 +42,13 @@ function Navbar() {
             <Link to="/tablero" className="navbar-button">
               Mis incidencias
             </Link>
-            <Link onClick={logout} to="/" className="navbar-button">
-              Cerrar sesión
+            <Link 
+              onClick={logout} 
+              to="/" 
+              className={`navbar-button ${loading ? "btn-disabled" : ""}`}
+              aria-disabled={loading}
+            >
+              {loading ? "Saliendo..." : "Cerrar sesión"}
             </Link>
           </>
         )}
@@ -46,12 +58,16 @@ function Navbar() {
             <Link to="/admin/dashboard" className="navbar-button">
               Gestionar incidencias
             </Link>
-            <Link onClick={logout} to="/" className="navbar-button">
-              Cerrar sesión
+            <Link 
+              onClick={logout} 
+              to="/" 
+              className={`navbar-button ${loading ? "btn-disabled" : ""}`}
+              aria-disabled={loading}
+            >
+              {loading ? "Saliendo..." : "Cerrar sesión"}
             </Link>
           </>
         )}
-
       </div>
     </nav>
   );
