@@ -128,3 +128,40 @@ button[type="submit"]:disabled {
     padding: 1.6rem 1.4rem;
   }
 }
+
+/* 1. FOCO VISIBLE: Crucial para navegación por teclado */
+/* Esto asegura que se vea un borde claro cuando el usuario hace "Tab" sobre el botón */
+button:focus-visible, 
+.link-button:focus-visible {
+  outline: 3px solid #008d71;
+  outline-offset: 3px;
+}
+
+/* 2. ACCESIBILIDAD (SR-ONLY): */
+/* Esta clase oculta el texto visualmente pero permite que los lectores de pantalla lo lean */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* 3. ESTADO DE ERROR: */
+/* Mejora la visibilidad de los inputs cuando aria-invalid es true */
+.form-group input[aria-invalid="true"] {
+  border-color: #dc2626; /* Un rojo un poco más fuerte para contraste */
+  box-shadow: 0 0 0 1px #dc2626;
+}
+
+/* 4. PREVENCIÓN DE QUIEBRE UX: */
+/* Evita que el botón disabled parezca un error, solo que está inactivo */
+button[type="submit"].btn-disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
