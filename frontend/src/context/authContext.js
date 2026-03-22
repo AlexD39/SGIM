@@ -3,19 +3,28 @@ import { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(false); // Para feedback de carga en UI
-  const [sessionError, setSessionError] = useState(null); // Feedback de errores claro
+  // AJUSTE: Leemos el localStorage directamente en el inicio para evitar el "flash" de redirección
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
 
+  const [token, setToken] = useState(() => {
+    return localStorage.getItem("token") || null;
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [sessionError, setSessionError] = useState(null);
+
+  // Sincronizamos cambios por si acaso, pero el estado inicial ya es correcto
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
-    if (storedUser && storedToken) {
+    if (storedUser && storedToken && !user) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
     }
-  }, []);
+  }, [user]);
 
   const login = ({ user, token }) => {
     setUser(user);
@@ -31,16 +40,21 @@ export function AuthProvider({ children }) {
     setSessionError(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-    // Tip de Accesibilidad: Aquí podrías redirigir al login y mover el foco al input
   };
 
-  // NUEVA FUNCIÓN: Cerrar otras sesiones (Logout Global)
   const logoutAllSessions = async () => {
+    // Validación de seguridad: si no hay token, no intentamos la petición
+    if (!token) {
+      setSessionError("No hay una sesión activa para realizar esta acción.");
+      return;
+    }
+
     setLoading(true);
     setSessionError(null);
 
     try {
-      // Reemplaza esta URL con la que te entregue el Backend
+      // NOTA: Para el deploy en Vercel, si no tienes la API real, 
+      // puedes comentar el fetch y usar un setTimeout para simular la espera.
       const response = await fetch("https://tu-api.com/auth/logout-others", {
         method: "POST",
         headers: {
@@ -50,14 +64,13 @@ export function AuthProvider({ children }) {
       });
 
       if (!response.ok) {
-        throw new Error("No se pudieron cerrar las otras sesiones.");
+        throw new Error("Error en la respuesta del servidor");
       }
 
-      // Feedback de éxito (puedes cambiarlo por un modal/toast después)
       alert("Se han cerrado todas las sesiones externas correctamente.");
       
     } catch (error) {
-      // Feedback claro sin exponer datos técnicos sensibles del servidor
+      // Feedback amigable para el usuario (UX)
       setSessionError("Hubo un problema al intentar cerrar otras sesiones. Inténtalo de nuevo.");
     } finally {
       setLoading(false);

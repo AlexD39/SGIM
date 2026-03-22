@@ -13,6 +13,9 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
+    // Si no hay usuario (ej. logout), no intentamos acceder al localStorage
+    if (!user) return;
+
     try {
       const raw = localStorage.getItem("incidencias");
       const todas = raw ? JSON.parse(raw) : [];
@@ -23,7 +26,7 @@ function Dashboard() {
     } catch (e) {
       mostrarError("Error al cargar datos", "No se pudieron cargar las incidencias. Intenta recargar la página.");
     }
-  }, []);
+  }, [user]);
 
   const handleEstadoChange = (id, nuevoEstado) => {
     const actualizadas = incidencias.map((inc) =>
@@ -47,6 +50,9 @@ function Dashboard() {
 
   const incidenciasFiltradas = filtro === "Todos" ? incidencias : incidencias.filter((inc) => inc.estado === filtro);
 
+  // PROTECCIÓN DE RENDER: Si el usuario no existe, evitamos que React intente renderizar el resto del DOM
+  if (!user) return null;
+
   return (
     <main className="admin-container">
       <header>
@@ -56,16 +62,24 @@ function Dashboard() {
 
       {/* SECCIÓN DE SEGURIDAD PARA ADMIN */}
       <section className="session-management-section" style={{ marginBottom: '2rem' }}>
-        <p className="session-help-text">Sesión administrativa activa. Puedes cerrar otras sesiones abiertas.</p>
+        <p className="session-help-text">Sesión administrativa activa. Puedes cerrar otras sesiones abiertas vinculadas a tu cuenta.</p>
+        
         {sessionError && (
           <div className="auth-error-msg" role="alert" aria-live="assertive">
-            {sessionError}
+            <span>{sessionError}</span>
+            <button 
+              onClick={() => setSessionError(null)} 
+              aria-label="Cerrar error" 
+              style={{background:'none', border:'none', marginLeft:'auto', cursor:'pointer', color: 'inherit'}}
+            >✕</button>
           </div>
         )}
+
         <button 
           className="btn-logout-others" 
           onClick={logoutAllSessions} 
           disabled={loading}
+          aria-busy={loading}
         >
           {loading ? "Cerrando..." : "Cerrar sesiones globales"}
         </button>
@@ -95,12 +109,15 @@ function Dashboard() {
             <article key={inc.id} className="admin-card">
               <header>
                 <h3>{inc.titulo}</h3>
-                <span className={`estado estado-${inc.estado.replace(" ", "-").toLowerCase()}`}>{inc.estado}</span>
+                <span className={`estado estado-${inc.estado ? inc.estado.replace(/\s+/g, '-').toLowerCase() : 'pendiente'}`}>
+                  {inc.estado}
+                </span>
               </header>
               <p>{inc.descripcion}</p>
               {inc.imagen && <img src={inc.imagen} alt={`Imagen de la incidencia ${inc.titulo}`} />}
               <p className="matricula"><strong>Reporta la matricula:</strong> {inc.matricula}</p>
               <p><strong>Fecha:</strong> {inc.fecha}</p>
+              
               <label htmlFor={`estado-${inc.id}`}>Cambiar estado:</label>
               <select id={`estado-${inc.id}`} value={inc.estado} onChange={(e) => handleEstadoChange(inc.id, e.target.value)}>
                 <option value="Pendiente">Pendiente</option>

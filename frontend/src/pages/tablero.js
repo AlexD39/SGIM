@@ -12,11 +12,14 @@ function Tablero() {
   }, []);
 
   useEffect(() => {
+    // PROTECCIÓN: Si el usuario cierra sesión, no intentamos cargar nada
+    if (!user) return;
+
     try {
       const raw = localStorage.getItem("incidencias");
       const todas = raw ? JSON.parse(raw) : [];
       const filtradas = (Array.isArray(todas) ? todas : []).filter(
-        (inc) => inc.userId === user?.id
+        (inc) => inc.userId === user.id
       );
       const ordenadas = [...filtradas].sort((a, b) => (b.id || 0) - (a.id || 0));
       setMisIncidencias(ordenadas);
@@ -24,6 +27,9 @@ function Tablero() {
       mostrarError("Error al cargar datos", "No se pudieron cargar tus incidencias. Intenta recargar la página.");
     }
   }, [user]);
+
+  // Si el estado de usuario se limpia (logout), evitamos renderizar el resto
+  if (!user) return null;
 
   return (
     <main className="tablero-container">
@@ -39,7 +45,7 @@ function Tablero() {
             <article key={inc.id} className="card-incidencia">
               <header className="card-header">
                 <h3>{inc.titulo}</h3>
-                <span className={`estado estado-${inc.estado.replace(" ", "-").toLowerCase()}`}>
+                <span className={`estado estado-${inc.estado ? inc.estado.replace(/\s+/g, '-').toLowerCase() : 'pendiente'}`}>
                   {inc.estado}
                 </span>
               </header>
@@ -71,8 +77,14 @@ function Tablero() {
         
         {sessionError && (
           <div className="auth-error-msg" role="alert" aria-live="assertive">
-            {sessionError}
-            <button onClick={() => setSessionError(null)} aria-label="Cerrar error" style={{background:'none', border:'none', marginLeft:'auto', cursor:'pointer'}}>✕</button>
+            <span>{sessionError}</span>
+            <button 
+              onClick={() => setSessionError(null)} 
+              aria-label="Cerrar error" 
+              style={{background:'none', border:'none', marginLeft:'auto', cursor:'pointer', color: 'inherit', fontWeight: 'bold'}}
+            >
+              ✕
+            </button>
           </div>
         )}
 
