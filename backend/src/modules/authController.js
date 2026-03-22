@@ -22,6 +22,7 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "unauthorized", message: "Credenciales inválidas" });
     }
 
+    // Aqui se implementa el access token con JWT
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET || "secret_key",

@@ -10,6 +10,7 @@ function authRequired(req, res, next) {
 
   try {
     // Agregamos un "o secreto_para_el_mvp" por seguridad si el .env falla
+    //Aqui se valida el accesstoken
     const payload = jwt.verify(token, process.env.JWT_SECRET || 'secreto_para_el_mvp');
     req.user = payload; // Aquí vienen { sub, role, email }
     return next();
