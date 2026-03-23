@@ -14,7 +14,11 @@ function createApp() {
 
 const cors = require("cors");
 
-const ALLOWED_ORIGINS = ["http://localhost:3003", "http://localhost:3000"];
+const ALLOWED_ORIGINS = [
+  "http://localhost:3003",
+  "http://localhost:3000",
+  "http://localhost:3001",
+];
 
 app.use(cors({
   origin: (origin, cb) => {

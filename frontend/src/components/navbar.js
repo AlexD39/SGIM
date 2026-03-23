@@ -50,13 +50,13 @@ function Navbar() {
               <Link to="/admin/dashboard" className="navbar-button">Gestionar incidencias</Link>
             )}
 
-            {/* BOTÓN DE LOGOUT MEJORADO */}
-            <button 
-              onClick={handleLogout} 
-              className={`navbar-button ${loading ? "btn-disabled" : ""}`}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="navbar-button"
               disabled={loading}
-              style={{ background: 'none', cursor: 'pointer' }} // Para que parezca link pero sea botón
               aria-busy={loading}
+              aria-label={loading ? "Cerrando sesión" : "Cerrar sesión"}
             >
               {loading ? "Saliendo..." : "Cerrar sesión"}
             </button>
