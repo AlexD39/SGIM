@@ -39,3 +39,26 @@ jobs:
         if: hashFiles('backend/package.json') != ''
         run: npm run build --if-present
         working-directory: backend
+
+  frontend-ci:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        if: hashFiles('frontend/package.json') != ''
+        run: npm install
+        working-directory: frontend
+
+      - name: Build
+        if: hashFiles('frontend/package.json') != ''
+        run: npm run build --if-present
+        working-directory: frontend
