@@ -36,9 +36,28 @@
   border-radius: 4px;
   text-decoration: none;
   font-weight: bold;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  display: inline-block;
+  box-sizing: border-box;
+  line-height: normal;
+  text-align: center;
 }
 
-.navbar-button:hover,
-.navbar-button:focus {
+/* Mismo aspecto que los Link del navbar */
+button.navbar-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.navbar-button:hover:not(:disabled),
+.navbar-button:focus-visible {
   background-color: #006651;
+  color: #ffffff;
+}
+
+.navbar-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }

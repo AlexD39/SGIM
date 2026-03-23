@@ -1,21 +1,37 @@
 const jwt = require("jsonwebtoken");
+const pool = require("../config/db");
 
-function authRequired(req, res, next) {
+async function authRequired(req, res, next) {
   const auth = req.headers.authorization || "";
   const [type, token] = auth.split(" ");
 
   if (type !== "Bearer" || !token) {
-    return res.status(401).json({ error: "unauthorized", message: "Falta token Bearer" });
+    return res.status(401).json({ error: "unauthorized", message: "No autorizado" });
   }
 
   try {
     // Agregamos un "o secreto_para_el_mvp" por seguridad si el .env falla
     //Aqui se valida el accesstoken
     const payload = jwt.verify(token, process.env.JWT_SECRET || 'secreto_para_el_mvp');
-    req.user = payload; // Aquí vienen { sub, role, email }
+
+    // 🔥 NUEVO: validar sesión en BD
+    const result = await pool.query(
+      `SELECT * FROM sessions 
+       WHERE jti = $1 AND is_active = true`,
+      [payload.jti]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(401).json({ error: "unauthorized", message: "No autorizado" });
+    }
+
+    req.user = payload;
+    req.session = result.rows[0]; // 👈 importante para logout
+
     return next();
+
   } catch (e) {
-    return res.status(401).json({ error: "unauthorized", message: "Token inválido o expirado" });
+    return res.status(401).json({ error: "unauthorized", message: "No autorizado" });
   }
 }
 

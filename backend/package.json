@@ -23,7 +23,8 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
     "pg": "^8.18.0",
-    "sweetalert2": "^11.26.19"
+    "sweetalert2": "^11.26.19",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",

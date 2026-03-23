@@ -103,3 +103,70 @@
   font-size: 0.9rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
+
+/* Contenedor de seguridad en el Dashboard/Tablero */
+.session-management-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08); /* Igual que tus cards */
+  border-left: 4px solid #1e88e5; /* Coincide con tus comentarios */
+}
+
+/* Mensaje de error con Accesibilidad (Aria-live) */
+.auth-error-msg {
+  background-color: #fff5f5;
+  color: #c53030;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border: 1px solid #feb2b2;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Mismo estilo que navbar: Reportar incidencia / Mis incidencias */
+.btn-logout-others {
+  background-color: #008d71;
+  color: #ffffff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-logout-others:hover:not(:disabled) {
+  background-color: #006651;
+  color: #ffffff;
+}
+
+.btn-logout-others:focus-visible {
+  outline: 3px solid #006651;
+  outline-offset: 2px;
+}
+
+.btn-logout-others:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  background-color: #008d71;
+  color: #ffffff;
+}
+
+/* Texto de ayuda */
+.session-help-text {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+  display: block;
+}
