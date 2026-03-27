@@ -10,11 +10,14 @@ async function authRequired(req, res, next) {
   }
 
   try {
-    // Agregamos un "o secreto_para_el_mvp" por seguridad si el .env falla
-    //Aqui se valida el accesstoken
-    const payload = jwt.verify(token, process.env.JWT_SECRET || 'secreto_para_el_mvp');
+    // 🔥 Validación de entorno (DevOps correcto)
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET no está definido en el entorno");
+    }
 
-    // 🔥 NUEVO: validar sesión en BD
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+
+    // 🔥 Validar sesión en BD
     const result = await pool.query(
       `SELECT * FROM sessions 
        WHERE jti = $1 AND is_active = true`,
@@ -26,7 +29,7 @@ async function authRequired(req, res, next) {
     }
 
     req.user = payload;
-    req.session = result.rows[0]; // 👈 importante para logout
+    req.session = result.rows[0];
 
     return next();
 
@@ -35,15 +38,10 @@ async function authRequired(req, res, next) {
   }
 }
 
-/**
- * requireRole ahora permite que pases uno o varios roles
- * Ejemplo: requireRole("admin") o requireRole("admin", "encargado")
- */
 function requireRole(...roles) {
   return (req, res, next) => {
-    // Nota: usamos req.user.role porque así lo configuramos en el authController
-    const userRole = req.user?.role; 
-    
+    const userRole = req.user?.role;
+
     if (!userRole || !roles.includes(userRole)) {
       return res.status(403).json({ 
         error: "forbidden", 
