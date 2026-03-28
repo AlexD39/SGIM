@@ -5,7 +5,7 @@ const { authRequired, requireRole } = require("../middleware/authJwt");
 // ✅ Importamos Multer (el middleware de subida)
 const upload = require("../middleware/upload");
 // ✅ Controladores integrados
-const { login, register, getSessions, logout, logoutAll } = require("../modules/authController"); 
+const { login, register, getSessions, logout, logoutAll, forgotPassword, resetPassword } = require("../modules/authController"); 
 const { crearReporte } = require("../modules/reportsController");
 const cors = require("cors");
 
@@ -53,6 +53,10 @@ app.use(cors({
   // Asegúrate que en Thunder Client envías un JSON con "email" y "password"
   app.post("/auth/register", register);
   app.post("/auth/login", login); 
+
+  //RECUPERACIÓN DE CONTRASEÑA
+  app.post("/auth/forgot-password", forgotPassword);
+  app.post("/auth/reset-password", resetPassword);
 
   // 🔥 MULTISESIÓN
   app.get("/auth/sessions", authRequired, getSessions);

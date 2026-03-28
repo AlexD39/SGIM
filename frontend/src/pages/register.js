@@ -144,7 +144,7 @@ const handleSubmit = async (e) => {
   try {
     const full_name = `${formData.nombre} ${formData.apellido}`.trim();
 
-    const resp = await fetch("http://localhost:3001/auth/register", {
+    const resp = await fetch("http://localhost:3000/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

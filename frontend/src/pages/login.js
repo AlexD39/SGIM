@@ -73,7 +73,7 @@ function Login() {
     // ✅ MISMO DELAY / MISMA ANIMACIÓN QUE ANTES
     setTimeout(async () => {
       try {
-        const resp = await fetch("http://localhost:3001/auth/login", {
+        const resp = await fetch("http://localhost:3000/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
