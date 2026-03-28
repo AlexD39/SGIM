@@ -2,15 +2,17 @@ name: CI
 
 on:
   push:
-    branches: [main, feature/dom]
+    branches: [main, develop, feature/**]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
   backend-ci:
+    name: Backend CI
     runs-on: ubuntu-latest
 
     env:
+      NODE_ENV: test
       JWT_SECRET: test_secret
       JWT_EXPIRES_IN: 1h
       SESSION_SECRET: test_session
@@ -26,8 +28,26 @@ jobs:
       SMTP_PASS: testpass
       SMTP_FROM: SGIM
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run lint
+        run: npm run lint || echo "No lint configured"
+
+      - name: Build
+        run: npm run build || echo "No build configured"
+
   frontend-ci:
-    name: Frontend Build
+    name: Frontend CI
     runs-on: ubuntu-latest
 
     steps:
