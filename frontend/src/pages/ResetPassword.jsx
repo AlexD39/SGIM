@@ -115,5 +115,5 @@ const ResetPassword = () => {
         </div>
     );
 };
-
+// Fix deployment casing
 export default ResetPassword;
