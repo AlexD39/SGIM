@@ -10,6 +10,8 @@ import Formulario from "./pages/formulario";
 import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Tablero from "./pages/tablero";
+import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/resetPassword";
 import "./App.css";
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
           {/* Rutas Públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/register" element={<Register />} />
           <Route path="/500" element={<ServerError />} />
 

@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
 import { mostrarError } from "../services/swal";
+import { API_BASE } from "../config/api";
 import "../styles/login.css";
 
 function Login() {
@@ -73,7 +74,7 @@ function Login() {
     // ✅ MISMO DELAY / MISMA ANIMACIÓN QUE ANTES
     setTimeout(async () => {
       try {
-        const resp = await fetch("http://localhost:3000/auth/login", {
+        const resp = await fetch(`${API_BASE}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -158,6 +159,10 @@ function Login() {
               </span>
             )}
           </div>
+
+          <p className="form-hint" style={{ marginBottom: "0.75rem" }}>
+            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+          </p>
 
           <button
             type="submit"
