@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const pool = require("../config/db");
 const { v4: uuidv4 } = require("uuid");
+const crypto = require("crypto");
+const { sendResetEmail } = require("../utils/mailer");
 
 const login = async (req, res) => {
   try {
@@ -91,6 +93,121 @@ const register = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body || {};
+
+    if (!email) {
+      return res.status(400).json({
+        error: "bad_request",
+        message: "Email requerido"
+      });
+    }
+
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [email]
+    );
+
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+
+      // 🔐 generar token
+      const rawToken = crypto.randomBytes(32).toString("hex");
+
+      // 🔐 hash
+      const tokenHash = await bcrypt.hash(rawToken, 10);
+
+      // ⏳ expiración 30 min
+      const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
+
+      // 💾 guardar
+      await pool.query(
+        `INSERT INTO password_reset_tokens (user_id, token_hash, expires_at)
+         VALUES ($1, $2, $3)`,
+        [user.id, tokenHash, expiresAt]
+      );
+
+      // 📧 enviar correo
+      await sendResetEmail(user.email, rawToken);
+    }
+
+    // 🔒 respuesta SIEMPRE igual
+    return res.json({
+      message:
+        "Si el correo existe, recibirás instrucciones para restablecer tu contraseña."
+    });
+
+  } catch (error) {
+    console.error("🔴 ERROR EN FORGOT PASSWORD:", error);
+    return res.status(500).json({
+      error: "server_error",
+      message: "Error interno"
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token, newPassword } = req.body || {};
+
+    if (!token || !newPassword) {
+      return res.status(400).json({
+        error: "bad_request",
+        message: "Token y nueva contraseña requeridos"
+      });
+    }
+
+    const tokensResult = await pool.query(
+      `SELECT * FROM password_reset_tokens
+       WHERE used_at IS NULL
+       AND expires_at > NOW()`
+    );
+
+    let validToken = null;
+
+    for (const record of tokensResult.rows) {
+      const match = await bcrypt.compare(token, record.token_hash);
+      if (match) {
+        validToken = record;
+        break;
+      }
+    }
+
+    if (!validToken) {
+      return res.status(400).json({
+        error: "invalid_token",
+        message: "Token inválido o expirado"
+      });
+    }
+
+    // 🔐 nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await pool.query(
+      "UPDATE users SET password = $1 WHERE id = $2",
+      [hashedPassword, validToken.user_id]
+    );
+
+    // 🔒 invalidar token
+    await pool.query(
+      "UPDATE password_reset_tokens SET used_at = NOW() WHERE id = $1",
+      [validToken.id]
+    );
+
+    return res.json({
+      message: "Contraseña actualizada correctamente"
+    });
+
+  } catch (error) {
+    console.error("🔴 ERROR EN RESET PASSWORD:", error);
+    return res.status(500).json({
+      error: "server_error",
+      message: "Error interno"
+    });
+  }
+};
+
 const getSessions = async (req, res) => {
   try {
     const result = await pool.query(
@@ -132,4 +249,4 @@ const logoutAll = async (req, res) => {
   }
 };
 
-module.exports = { login, register, getSessions, logout, logoutAll };
+module.exports = { login, register, getSessions, logout, logoutAll, forgotPassword, resetPassword };

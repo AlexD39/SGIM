@@ -6,15 +6,17 @@ function Breadcrumbs() {
   const paths = location.pathname.split("/").filter(Boolean);
 
   const breadcrumbMap = {
-  login: "Inicio de sesión",
-  register: "Registro",
-  inicio: "Inicio",
-  admin: "Panel administrativo",
-  user: "Usuario UTT",
-  tablero: "Tablero de incidencias",
-  formulario: "Reporte de incidencia",
-  dashboard: "Gestión de incidencias",
-};
+    login: "Inicio de sesión",
+    register: "Registro",
+    inicio: "Inicio",
+    admin: "Panel administrativo",
+    user: "Usuario UTT",
+    tablero: "Tablero de incidencias",
+    formulario: "Reporte de incidencia",
+    dashboard: "Gestión de incidencias",
+    "forgot-password": "Recuperar contraseña",
+    "reset-password": "Nueva contraseña",
+  };
 
   return (
     <nav aria-label="Ruta de navegación">

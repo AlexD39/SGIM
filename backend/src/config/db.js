@@ -1,13 +1,31 @@
 const { Pool } = require("pg");
 require("dotenv").config();
 
-const connectionString =
-  process.env.DATABASE_URL ||
-  `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+function buildPoolConfig() {
+  const rawUrl = (process.env.DATABASE_URL || "").trim();
+  if (rawUrl && /^postgres(ql)?:\/\//i.test(rawUrl)) {
+    return { connectionString: rawUrl };
+  }
 
-const pool = new Pool({ connectionString });
+  const host = process.env.DB_HOST || "127.0.0.1";
+  const port = parseInt(process.env.DB_PORT || "5432", 10);
+  const user = process.env.DB_USER;
+  const password = process.env.DB_PASSWORD ?? "";
+  const database = process.env.DB_NAME || "sgim";
 
-// Prueba de conexión inicial (omitir en test para no abrir conexión real ni logs tras tests)
+  if (!user) {
+    console.error("\n❌ Falta configuración de PostgreSQL en backend/.env");
+    console.error("   Crea el archivo copiando:  copy .env.example .env");
+    console.error("   y define al menos: DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT");
+    console.error("   O bien una DATABASE_URL válida (postgresql://...)\n");
+    process.exit(1);
+  }
+
+  return { host, port, user, password, database };
+}
+
+const pool = new Pool(buildPoolConfig());
+
 if (process.env.NODE_ENV !== "test") {
   pool.query("SELECT NOW()", (err) => {
     if (err) console.error("❌ Error conectando a PostgreSQL:", err.stack);

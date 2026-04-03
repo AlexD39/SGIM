@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "../config/api";
 import { useEffect, useRef, useState } from "react";
 import "../styles/register.css";
 
@@ -144,7 +145,7 @@ const handleSubmit = async (e) => {
   try {
     const full_name = `${formData.nombre} ${formData.apellido}`.trim();
 
-    const resp = await fetch("http://localhost:3001/auth/register", {
+    const resp = await fetch(`${API_BASE}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
