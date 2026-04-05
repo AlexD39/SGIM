@@ -54,6 +54,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: backend
 
       - name: Wait for PostgreSQL
         run: |
@@ -70,6 +71,7 @@ jobs:
           else
             echo "No tests found" && exit 1
           fi
+        working-directory: backend
 
   frontend-ci:
     name: Frontend CI
