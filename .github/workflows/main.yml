@@ -37,16 +37,15 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install dependencies (safe mode)
-        run: |
-          npm install || true
+      - name: Install dependencies
+        run: npm install
 
-      - name: Run tests safely
+      - name: Run tests
         run: |
           if [ -f package.json ] && grep -q '"test"' package.json; then
-            npm test || echo "Tests failed but continuing"
+            npm test
           else
-            echo "No tests found"
+            echo "No tests found" && exit 1
           fi
 
   frontend-ci:
@@ -62,10 +61,9 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install dependencies (safe mode)
+      - name: Install dependencies
         if: hashFiles('frontend/package.json') != ''
-        run: |
-          npm install || true
+        run: npm install
         working-directory: frontend
 
       - name: Build
