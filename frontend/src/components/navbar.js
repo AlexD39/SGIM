@@ -1,17 +1,16 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { Link, useNavigate } from "react-router-dom"; // Importamos useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 
 function Navbar() {
   const { user, logout, loading, sessionError } = useContext(AuthContext);
-  const navigate = useNavigate(); // Hook para navegar programáticamente
+  const navigate = useNavigate();
 
-  // Función para manejar el logout de forma segura
   const handleLogout = (e) => {
-    e.preventDefault(); // Evitamos que el Link actúe antes de tiempo
+    e.preventDefault();
     logout();
-    navigate("/"); // Navegamos después de limpiar el estado
+    navigate("/");
   };
 
   return (
@@ -39,24 +38,25 @@ function Navbar() {
 
         {user && (
           <>
-            {user.role === "usuario" && (
+            {/* Lógica de visualización basada en el rol del usuario */}
+            {user.rol === "usuario" && (
               <>
                 <Link to="/formulario" className="navbar-button">Reportar incidencia</Link>
                 <Link to="/tablero" className="navbar-button">Mis incidencias</Link>
               </>
             )}
 
-            {user.role === "admin" && (
+            {user.rol === "admin" && (
               <Link to="/admin/dashboard" className="navbar-button">Gestionar incidencias</Link>
             )}
 
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="navbar-button"
+            {/* Botón de Logout */}
+            <button 
+              onClick={handleLogout} 
+              className={`navbar-button ${loading ? "btn-disabled" : ""}`}
               disabled={loading}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
               aria-busy={loading}
-              aria-label={loading ? "Cerrando sesión" : "Cerrar sesión"}
             >
               {loading ? "Saliendo..." : "Cerrar sesión"}
             </button>

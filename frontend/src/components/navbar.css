@@ -61,3 +61,17 @@ button.navbar-button {
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+/* Asegura que el botón de logout se comporte visualmente como tus otros links */
+.navbar-button {
+  border: none;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 8px 16px;
+  transition: opacity 0.3s ease;
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -10,8 +10,8 @@ import Formulario from "./pages/formulario";
 import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Tablero from "./pages/tablero";
-import ForgotPassword from "./pages/forgotPassword";
-import ResetPassword from "./pages/resetPassword";
+import ForgotPassword from "./pages/ForgotPassword"; 
+import ResetPassword from "./pages/ResetPassword";
 import "./App.css";
 
 function App() {
@@ -28,12 +28,12 @@ function App() {
           {/* Rutas Públicas */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/500" element={<ServerError />} />
 
-          {/* Rutas Protegidas - Usuario */}
+          {/* Rutas Protegidas - Solo para Rol 'usuario' */}
           <Route 
             path="/formulario" 
             element={
@@ -51,7 +51,7 @@ function App() {
             } 
           />
 
-          {/* Rutas Protegidas - Admin */}
+          {/* Rutas Protegidas - Solo para Rol 'admin' */}
           <Route 
             path="/admin/dashboard" 
             element={
