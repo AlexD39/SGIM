@@ -1,5 +1,10 @@
 import { createContext, useState, useEffect } from "react";
 
+/** Misma base que login/formulario (CRA: definir REACT_APP_API_URL en .env) */
+const API_BASE =
+  (typeof process !== "undefined" && process.env.REACT_APP_API_URL) ||
+  "http://localhost:3001";
+
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -53,12 +58,10 @@ export function AuthProvider({ children }) {
     setSessionError(null);
 
     try {
-      // NOTA: Para el deploy en Vercel, si no tienes la API real, 
-      // puedes comentar el fetch y usar un setTimeout para simular la espera.
-      const response = await fetch("https://tu-api.com/auth/logout-others", {
+      const response = await fetch(`${API_BASE}/auth/logout-all`, {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });

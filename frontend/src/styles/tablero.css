@@ -129,40 +129,38 @@
   gap: 10px;
 }
 
-/* Botón de Logout Global (Estilo similar a tus botones pero en rojo) */
+/* Mismo estilo que navbar: Reportar incidencia / Mis incidencias */
 .btn-logout-others {
-  background-color: transparent;
-  color: #d32f2f;
-  border: 1.5px solid #d32f2f;
-  padding: 0.6rem 1.2rem;
-  border-radius: 20px; /* Redondeado como tus estados */
-  font-size: 0.85rem;
-  font-weight: 600;
+  background-color: #008d71;
+  color: #ffffff;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 }
 
 .btn-logout-others:hover:not(:disabled) {
-  background-color: #d32f2f;
-  color: white;
-  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+  background-color: #006651;
+  color: #ffffff;
 }
 
-/* Accesibilidad: Foco visible */
 .btn-logout-others:focus-visible {
-  outline: 3px solid #feb2b2;
+  outline: 3px solid #006651;
   outline-offset: 2px;
 }
 
-/* Estado de carga (UX) */
 .btn-logout-others:disabled {
-  opacity: 0.6;
-  cursor: wait;
-  border-color: #ccc;
-  color: #888;
+  opacity: 0.65;
+  cursor: not-allowed;
+  background-color: #008d71;
+  color: #ffffff;
 }
 
 /* Texto de ayuda */

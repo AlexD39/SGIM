@@ -22,6 +22,7 @@ function Navbar() {
       </div>
 
       <div className="navbar-right">
+        {/* Accesibilidad: Aria-live para errores de sesión */}
         {sessionError && (
           <span className="sr-only" role="alert" aria-live="polite">
             {sessionError}
@@ -37,7 +38,7 @@ function Navbar() {
 
         {user && (
           <>
-            {/* Se cambió .role por .rol para consistencia */}
+            {/* Lógica de visualización basada en el rol del usuario */}
             {user.rol === "usuario" && (
               <>
                 <Link to="/formulario" className="navbar-button">Reportar incidencia</Link>
@@ -49,6 +50,7 @@ function Navbar() {
               <Link to="/admin/dashboard" className="navbar-button">Gestionar incidencias</Link>
             )}
 
+            {/* Botón de Logout */}
             <button 
               onClick={handleLogout} 
               className={`navbar-button ${loading ? "btn-disabled" : ""}`}
