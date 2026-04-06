@@ -99,5 +99,5 @@ const ForgotPassword = () => {
         </div>
     );
 };
-// Fix deployment casing
+
 export default ForgotPassword;

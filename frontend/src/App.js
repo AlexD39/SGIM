@@ -17,7 +17,9 @@ import "./App.css";
 function App() {
   return (
     <>
+      {/* Contenedor para anuncios de lectores de pantalla (A11y) */}
       <div className="sr-only" aria-live="polite" aria-atomic="true" />
+
       <Navbar />
       <Breadcrumbs />
 
@@ -59,7 +61,7 @@ function App() {
             } 
           />
 
-          {/* Ruta 404 */}
+          {/* Ruta 404 - Siempre al final */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
