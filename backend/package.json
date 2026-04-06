@@ -22,8 +22,11 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
+    "nodemailer": "^8.0.4",
     "pg": "^8.18.0",
-    "sweetalert2": "^11.26.19"
+    "resend": "^6.9.4",
+    "sweetalert2": "^11.26.19",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",

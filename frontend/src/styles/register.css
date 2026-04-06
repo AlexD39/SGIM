@@ -31,12 +31,12 @@
   flex-direction: column;
 }
 
-label {
+.register-card label {
   font-weight: 600;
   margin-bottom: 0.3rem;
 }
 
-input {
+.register-card input {
   width: 100%;
   box-sizing: border-box;
   padding: 0.8rem 0.9rem;
@@ -46,12 +46,12 @@ input {
   border-radius: 5px;
 }
 
-input:focus {
+.register-card input:focus {
   outline: 2px solid #555;
   background-color: #d6d6d6;
 }
 
-input[aria-invalid="true"] {
+.register-card input[aria-invalid="true"] {
   border: 2px solid #c62828;
 }
 
@@ -74,7 +74,8 @@ input[aria-invalid="true"] {
   text-align: center;
 }
 
-button {
+/* Solo botones del formulario de registro (evita afectar navbar u otras pantallas) */
+.register-card button {
   width: 100%;
   margin-top: 1.5rem;
   padding: 0.9rem;
@@ -87,15 +88,15 @@ button {
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-button:disabled {
+.register-card button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   background-color: #539c8d;
-  color:#ffffff;
+  color: #ffffff;
 }
 
-button:not(:disabled):hover,
-button:not(:disabled):focus-visible {
+.register-card button:not(:disabled):hover,
+.register-card button:not(:disabled):focus-visible {
   background-color: #006651;
   transform: translateY(-1px);
 }
