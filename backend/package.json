@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node src/api/server.js",
     "dev": "node src/api/server.js",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest",
+    "test:integration": "cross-env NODE_ENV=test SGIM_RUN_AUTH_INTEGRATION=1 jest tests/auth.test.js --runInBand"
   },
   "keywords": [],
   "author": "",

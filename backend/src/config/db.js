@@ -9,16 +9,22 @@ function buildPoolConfig() {
 
   const host = process.env.DB_HOST || "127.0.0.1";
   const port = parseInt(process.env.DB_PORT || "5432", 10);
-  const user = process.env.DB_USER;
-  const password = process.env.DB_PASSWORD ?? "";
-  const database = process.env.DB_NAME || "sgim";
+  let user = process.env.DB_USER;
+  let password = process.env.DB_PASSWORD ?? "";
+  let database = process.env.DB_NAME || "sgim";
 
   if (!user) {
-    console.error("\n❌ Falta configuración de PostgreSQL en backend/.env");
-    console.error("   Crea el archivo copiando:  copy .env.example .env");
-    console.error("   y define al menos: DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT");
-    console.error("   O bien una DATABASE_URL válida (postgresql://...)\n");
-    process.exit(1);
+    if (process.env.NODE_ENV === "test") {
+      user = "test";
+      password = "test";
+      database = process.env.DB_NAME || "test_db";
+    } else {
+      console.error("\n❌ Falta configuración de PostgreSQL en backend/.env");
+      console.error("   Crea el archivo copiando:  copy .env.example .env");
+      console.error("   y define al menos: DB_USER, DB_PASSWORD, DB_NAME, DB_HOST, DB_PORT");
+      console.error("   O bien una DATABASE_URL válida (postgresql://...)\n");
+      process.exit(1);
+    }
   }
 
   return { host, port, user, password, database };

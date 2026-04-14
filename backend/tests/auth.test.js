@@ -1,19 +1,28 @@
+process.env.NODE_ENV = "test";
+process.env.JWT_SECRET = process.env.JWT_SECRET || "test_secret";
+
 const request = require("supertest");
+
+const runIntegration = process.env.CI === "true" || process.env.SGIM_RUN_AUTH_INTEGRATION === "1";
+const describeAuth = runIntegration ? describe : describe.skip;
+
 const { createApp } = require("../src/api/app");
 
-const app = createApp();
-
+let app;
 let token1;
 let token2;
 
-describe("🔐 Auth Multisesión", () => {
+describeAuth("🔐 Auth Multisesión", () => {
+  beforeAll(() => {
+    app = createApp();
+  });
 
   it("✅ Login debe funcionar", async () => {
     const res = await request(app)
       .post("/auth/login")
       .send({
         email: "admin@sgim.com",
-        password: "123456"
+        password: "123456",
       });
 
     expect(res.statusCode).toBe(200);
@@ -27,7 +36,7 @@ describe("🔐 Auth Multisesión", () => {
       .post("/auth/login")
       .send({
         email: "admin@sgim.com",
-        password: "123456"
+        password: "123456",
       });
 
     expect(res.statusCode).toBe(200);
@@ -35,44 +44,33 @@ describe("🔐 Auth Multisesión", () => {
   });
 
   it("📱 Debe listar sesiones", async () => {
-    const res = await request(app)
-      .get("/auth/sessions")
-      .set("Authorization", `Bearer ${token1}`);
+    const res = await request(app).get("/auth/sessions").set("Authorization", `Bearer ${token1}`);
 
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
 
   it("🚪 Logout de una sesión", async () => {
-    const res = await request(app)
-      .post("/auth/logout")
-      .set("Authorization", `Bearer ${token1}`);
+    const res = await request(app).post("/auth/logout").set("Authorization", `Bearer ${token1}`);
 
     expect(res.statusCode).toBe(200);
   });
 
   it("❌ Token inválido después de logout", async () => {
-    const res = await request(app)
-      .get("/auth/sessions")
-      .set("Authorization", `Bearer ${token1}`);
+    const res = await request(app).get("/auth/sessions").set("Authorization", `Bearer ${token1}`);
 
     expect(res.statusCode).toBe(401);
   });
 
   it("💥 Logout-all invalida todas", async () => {
-    const res = await request(app)
-      .post("/auth/logout-all")
-      .set("Authorization", `Bearer ${token2}`);
+    const res = await request(app).post("/auth/logout-all").set("Authorization", `Bearer ${token2}`);
 
     expect(res.statusCode).toBe(200);
   });
 
   it("❌ Token2 también inválido", async () => {
-    const res = await request(app)
-      .get("/auth/sessions")
-      .set("Authorization", `Bearer ${token2}`);
+    const res = await request(app).get("/auth/sessions").set("Authorization", `Bearer ${token2}`);
 
     expect(res.statusCode).toBe(401);
   });
-
 });

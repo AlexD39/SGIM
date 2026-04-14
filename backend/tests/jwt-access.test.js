@@ -15,7 +15,7 @@ describe("JWT access control (public/private/roles)", () => {
     process.env.JWT_EXPIRES = "1h";
     db.query.mockImplementation((sql, params) => {
       const email = params && params[0];
-      if (email === "user@sgim.com") return Promise.resolve({ rows: [{ id: 1, email: "user@sgim.com", role: "user", password: "hash" }] });
+      if (email === "user@sgim.com") return Promise.resolve({ rows: [{ id: 1, email: "user@sgim.com", role: "usuario", password: "hash" }] });
       if (email === "admin@sgim.com") return Promise.resolve({ rows: [{ id: 2, email: "admin@sgim.com", role: "admin", password: "hash" }] });
       return Promise.resolve({ rows: [] });
     });
@@ -57,7 +57,7 @@ describe("JWT access control (public/private/roles)", () => {
     expect(res.body).toHaveProperty("user");
   });
 
-  test("Role: GET /admin/reports con user -> 403", async () => {
+  test("Role: GET /admin/reports con usuario -> 403", async () => {
     const token = await loginAs("user@sgim.com");
     const res = await request(app).get("/admin/reports").set("Authorization", `Bearer ${token}`);
     expect(res.status).toBe(403);

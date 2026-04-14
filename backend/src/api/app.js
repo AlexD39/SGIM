@@ -12,23 +12,34 @@ const cors = require("cors");
 function createApp() {
   const app = express();
 
-const cors = require("cors");
+  const extraOrigins = (process.env.CORS_ORIGINS || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
-const ALLOWED_ORIGINS = [
-  "http://localhost:3003",
-  "http://localhost:3000",
-  "http://localhost:3001",
-];
+  const allowedOrigins = new Set([
+    "http://localhost:3003",
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://sgim-psi.vercel.app",
+    ...extraOrigins,
+  ]);
 
-app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin) return cb(null, true);
-    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-    return cb(new Error("Not allowed by CORS"));
-  },
-  allowedHeaders: ["Content-Type", "Authorization"],
-  methods: ["GET","POST","PATCH","PUT","DELETE","OPTIONS"],
-}));
+  const isVercelPreview = (origin) =>
+    /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin || "");
+
+  app.use(
+    cors({
+      origin: (origin, cb) => {
+        if (!origin) return cb(null, true);
+        if (allowedOrigins.has(origin)) return cb(null, true);
+        if (isVercelPreview(origin)) return cb(null, true);
+        return cb(new Error("Not allowed by CORS"));
+      },
+      allowedHeaders: ["Content-Type", "Authorization"],
+      methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+    })
+  );
 
 
   app.use(express.json());
