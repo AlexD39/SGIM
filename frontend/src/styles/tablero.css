@@ -170,3 +170,31 @@
   margin-bottom: 1rem;
   display: block;
 }
+
+.tablero-empty {
+  margin-bottom: 2rem;
+}
+
+.tablero-empty p {
+  margin-bottom: 1rem;
+}
+
+.tablero-cta-link {
+  display: inline-block;
+  padding: 0.65rem 1.25rem;
+  background-color: #008d71;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.tablero-cta-link:hover {
+  background-color: #006651;
+  color: #fff;
+}
+
+.tablero-cta-link:focus-visible {
+  outline: 3px solid #006651;
+  outline-offset: 2px;
+}

@@ -1,7 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef, useState, useContext } from "react";
 import { AuthContext } from "../context/authContext";
-import { mostrarError } from "../services/swal";
+import { mostrarError, mostrarExito } from "../services/swal";
 import { API_BASE } from "../config/api";
 import "../styles/login.css";
 
@@ -105,6 +105,17 @@ function Login() {
         // Si tu AuthContext esperaba SOLO user, usa: login(user)
         // Si esperaba user+token, usa esto:
         login({ user, token });
+        setLoading(false);
+
+        const nombre =
+          (typeof user?.full_name === "string" && user.full_name.trim()) ||
+          user?.email ||
+          "usuario";
+
+        await mostrarExito(
+          "Inicio de sesión exitoso",
+          `Bienvenido/a, ${nombre}. Has entrado correctamente a SGIM.`
+        );
 
         const role = user?.role || user?.rol;
         if (role === "admin") navigate("/admin/dashboard");

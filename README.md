@@ -85,3 +85,9 @@ Arquitectura **monolítica modular**, elegida para:
 ### Backend
 API REST organizada por módulos:
 
+---
+
+## Despliegue (Vercel + API)
+
+Guía paso a paso para publicar el frontend en Vercel y conectar el API: [`docs/DESPLIEGUE_VERCEL.md`](docs/DESPLIEGUE_VERCEL.md).
+

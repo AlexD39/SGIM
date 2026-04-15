@@ -51,9 +51,10 @@ export function mostrarExito(titulo, mensaje) {
 
   return Swal.fire({
     icon: "success",
+    iconColor: CONFIRM_BUTTON_COLOR,
     title: titulo,
     text: mensaje,
-    confirmButtonText: "Entendido",
+    confirmButtonText: "Continuar",
     confirmButtonColor: CONFIRM_BUTTON_COLOR,
     ...(reduceMotion
       ? {}

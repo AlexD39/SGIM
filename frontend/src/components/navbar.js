@@ -38,15 +38,15 @@ function Navbar() {
 
         {user && (
           <>
-            {/* Lógica de visualización basada en el rol del usuario */}
-            {user.rol === "usuario" && (
+            {/* Backend usa `role`; dejamos `rol` por compatibilidad */}
+            {(user.role ?? user.rol) === "usuario" && (
               <>
                 <Link to="/formulario" className="navbar-button">Reportar incidencia</Link>
                 <Link to="/tablero" className="navbar-button">Mis incidencias</Link>
               </>
             )}
 
-            {user.rol === "admin" && (
+            {(user.role ?? user.rol) === "admin" && (
               <Link to="/admin/dashboard" className="navbar-button">Gestionar incidencias</Link>
             )}
 

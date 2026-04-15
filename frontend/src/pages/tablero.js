@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
 import { mostrarError } from "../services/swal";
 import "../styles/tablero.css";
@@ -38,7 +39,12 @@ function Tablero() {
       </header>
 
       {misIncidencias.length === 0 ? (
-        <p role="status">No has reportado incidencias todavía.</p>
+        <div className="tablero-empty" role="status">
+          <p>No has reportado incidencias todavía.</p>
+          <Link to="/formulario" className="tablero-cta-link">
+            Reportar una incidencia
+          </Link>
+        </div>
       ) : (
         <section className="grid-incidencias" aria-label="Listado de incidencias del usuario">
           {misIncidencias.map((inc) => (

@@ -32,12 +32,17 @@ describe("ProtectedRoute", () => {
     expect(await screen.findByRole("heading", { name: /iniciar sesión/i })).toBeInTheDocument();
   });
 
-  test("con user pero rol NO permitido redirige a /", async () => {
-    renderProtected({ user: { rol: "user" }, allowedRoles: ["admin"] });
+  test("con user pero role NO permitido redirige a /", async () => {
+    renderProtected({ user: { role: "usuario" }, allowedRoles: ["admin"] });
     expect(await screen.findByRole("heading", { name: /inicio/i })).toBeInTheDocument();
   });
 
-  test("con user y rol permitido muestra children", async () => {
+  test("con user y role permitido muestra children", async () => {
+    renderProtected({ user: { role: "admin" }, allowedRoles: ["admin"] });
+    expect(await screen.findByRole("heading", { name: /zona privada/i })).toBeInTheDocument();
+  });
+
+  test("acepta rol legado (rol) si no hay role", async () => {
     renderProtected({ user: { rol: "admin" }, allowedRoles: ["admin"] });
     expect(await screen.findByRole("heading", { name: /zona privada/i })).toBeInTheDocument();
   });

@@ -10,10 +10,13 @@ function ProtectedRoute({ children, allowedRoles }) {
     return <Navigate to="/login" replace />;
   }
 
-  // 2. Si hay roles permitidos definidos, verificamos el acceso
-  // IMPORTANTE: Usamos 'rol' para coincidir con tu authContext y tests
-  if (allowedRoles && !allowedRoles.includes(user.rol)) {
+  // Backend devuelve `role` (JWT /login). Compatibilidad con `rol` por si acaso.
+  const role = user.role ?? user.rol;
+  if (allowedRoles && role && !allowedRoles.includes(role)) {
     return <Navigate to="/" replace />;
+  }
+  if (allowedRoles && !role) {
+    return <Navigate to="/login" replace />;
   }
 
   // 3. Si todo está ok, mostramos el contenido

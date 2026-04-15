@@ -10,8 +10,8 @@ import Formulario from "./pages/formulario";
 import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Tablero from "./pages/tablero";
-import ForgotPassword from "./pages/ForgotPassword"; 
-import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/resetPassword";
 import "./App.css";
 
 function App() {

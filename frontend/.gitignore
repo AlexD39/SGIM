@@ -13,6 +13,8 @@
 
 # misc
 .DS_Store
+# No subir credenciales ni URLs de API reales; usa .env.example y variables en Vercel.
+.env
 .env.local
 .env.development.local
 .env.test.local

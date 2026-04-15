@@ -14,11 +14,12 @@ const sendResetEmail = async (to, token) => {
   }
 
   const resend = new Resend(apiKey);
-  await resend.emails.send({
-    from: process.env.RESEND_FROM || "onboarding@resend.dev",
-    to,
-    subject: "Recuperación de contraseña — SGIM",
-    html: `
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM || "onboarding@resend.dev",
+      to,
+      subject: "Recuperación de contraseña — SGIM",
+      html: `
       <h3>Recuperación de contraseña</h3>
       <p>Haz clic en el siguiente enlace:</p>
       <p><a href="${resetLink}">Restablecer contraseña</a></p>
@@ -26,7 +27,13 @@ const sendResetEmail = async (to, token) => {
       <p style="word-break:break-all;font-size:12px;">${resetLink}</p>
       <p>Expira en 30 minutos.</p>
     `,
-  });
+    });
+  } catch (err) {
+    console.error("🔴 Resend: error al enviar correo:", err?.message || err);
+    console.log("\n📧 Enlace de recuperación (usa este enlace si el correo no llegó):\n");
+    console.log(resetLink);
+    console.log("\n");
+  }
 };
 
 module.exports = { sendResetEmail };

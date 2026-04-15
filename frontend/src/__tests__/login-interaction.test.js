@@ -12,11 +12,17 @@ describe("Login: teclado + estados accesibles", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     swal.mostrarError.mockResolvedValue({});
+    swal.mostrarExito = jest.fn().mockResolvedValue({});
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: () => Promise.resolve({ message: "Correo o contraseña incorrectos." }),
+    });
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
+    jest.restoreAllMocks();
   });
 
   test("credenciales incorrectas muestran error con SweetAlert2", async () => {
@@ -34,6 +40,7 @@ describe("Login: teclado + estados accesibles", () => {
 
     await act(async () => {
       jest.advanceTimersByTime(1100);
+      await Promise.resolve();
     });
 
     expect(swal.mostrarError).toHaveBeenCalledWith(
